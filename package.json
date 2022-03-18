@@ -1,0 +1,46 @@
+{
+  "name": "voctrainer",
+  "version": "1.0.0",
+  "description": "Vokabeltrainer",
+  "main": "./js_dist/index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "start": "electron .",
+    "test": "tsc && electron .",
+    "dist": "tsc && electron-builder"
+  },
+  "author": "Nico Opheys",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.1",
+    "electron": "^17.1.2",
+    "electron-builder": "^22.14.13"
+  },
+  "dependencies": {
+    "custom-electron-titlebar": "^4.1.0",
+    "fs": "0.0.1-security",
+    "node-fetch": "^2.6.7",
+    "path": "^0.12.7",
+    "wikijs": "^6.3.3"
+  },
+  "build": {
+    "appId": "com.electron.voctrainer",
+    "productName": "VocTrainer",
+    "files": [
+      "assets/**/*",
+      "js_dist/**/*",
+      "lib/**/*",
+      "node_modules/**/*",
+      "ui/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "assets/icons/256.ico"
+    },
+    "publish": null
+  }
+}

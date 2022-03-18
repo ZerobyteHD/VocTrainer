@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splash</title>
+    <style>
+        html {
+            --card-margin: 3vw;
+            --card-stack-y-diff: 5px;
+            --card-x-rotation: 40deg;
+            --card-height: 50px;
+            --c1-intitial: translateX(calc(3 * var(--card-margin) + 150%))translateY(var(--card-stack-y-diff))perspective(400px) rotateX(var(--card-x-rotation));
+            --c2-intitial: translateX(calc(var(--card-margin) + 50%))translateY(calc(2 * var(--card-stack-y-diff)))perspective(400px) rotateX(var(--card-x-rotation));
+            --c3-intitial: translateX(calc(-50% - var(--card-margin)))translateY(calc(3 * var(--card-stack-y-diff)))perspective(400px) rotateX(var(--card-x-rotation));
+            --c4-intitial: translateX(calc(-150% - 3 * var(--card-margin)))translateY(calc(4 * var(--card-stack-y-diff)))perspective(400px) rotateX(var(--card-x-rotation));
+        }
+        html, body {
+            margin: 0;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: rgb(53, 53, 53);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .container {
+            font-size: 1.5rem;
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: row;
+        }
+        .sub {
+            font-size: 2rem;
+            margin-top: 30px;
+            transition: all 0.3s;
+        }
+        .card {
+            width: 22%;
+            height: var(--card-height);
+            margin: var(--card-margin);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: black;
+            background-color: white;
+            border: solid 1px gray;
+            animation-delay: 2s;
+        }
+        .card--1 {
+            transform: var(--c1-initial);
+            z-index: 10;
+            animation: card-home-1 5s infinite linear;
+        }
+        .card--2 {
+            transform: var(--c2-initial);
+            z-index: 9;
+            animation: card-home-2 5s infinite linear;
+        }
+        .card--3 {
+            transform: var(--c3-initial);
+            z-index: 8;
+            animation: card-home-3 5s infinite linear;
+        }
+        .card--4 {
+            transform: var(--c4-initial);
+            z-index: 7;
+            animation: card-home-4 5s infinite linear;
+        }
+
+        @keyframes card-home-1 {
+            0% {
+                transform: var(--c1-intitial);
+            }
+            25% {
+                transform: var(--c1-intitial);
+            }
+            50% {
+                transform: none;
+            }
+            75% {
+                transform: none;
+            }
+            100% {
+                transform: var(--c1-intitial);
+            }
+        }
+        @keyframes card-home-2 {
+            0% {
+                transform: var(--c2-intitial);
+            }
+            25% {
+                transform: var(--c2-intitial);
+            }
+            50% {
+                transform: none;
+            }
+            75% {
+                transform: none;
+            }
+            100% {
+                transform: var(--c2-intitial);
+            }
+        }
+        @keyframes card-home-3 {
+            0% {
+                transform: var(--c3-intitial);
+            }
+            25% {
+                transform: var(--c3-intitial);
+            }
+            50% {
+                transform: none;
+            }
+            75% {
+                transform: none;
+            }
+            100% {
+                transform: var(--c3-intitial);
+            }
+        }
+        @keyframes card-home-4 {
+            0% {
+                transform: var(--c4-intitial);
+            }
+            25% {
+                transform: var(--c4-intitial);
+            }
+            50% {
+                transform: none;
+            }
+            75% {
+                transform: none;
+            }
+            100% {
+                transform: var(--c4-intitial);
+            }
+        }
+        footer {
+            color: gray;
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card card--1">
+            <span>VO</span>
+        </div>
+        <div class="card card--2">
+            <span>CAB</span>
+        </div>
+        <div class="card card--3">
+            <span>TRAI</span>
+        </div>
+        <div class="card card--4">
+            <span>NER</span>
+        </div>
+    </div>
+    <div class="sub">Lade</div>
+    <footer>(R) Nico Opheys | Version 1.0</footer>
+
+    <script defer>
+        // Lade... - animation
+        var sub = document.querySelector(".sub");
+        var i = 0;
+        var dir = 1;
+        setInterval(()=>{
+            if(i>3) {
+                i = 2;
+                dir = -1;
+            } else if(i<0) {
+                i = 1;
+                dir = 1;
+            }
+            sub.innerHTML = "Lade"+".".repeat(i);
+            i += dir;
+        }, 500);
+    </script>
+</body>
+</html>

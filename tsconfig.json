@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "target": "ES2018",
+      "strict": true,
+      "module": "commonjs",
+      "sourceMap": true,
+      "outDir": "js_dist",
+      "lib": ["dom", "ES2018"],
+      "esModuleInterop": true,
+      "suppressImplicitAnyIndexErrors": true
+    },
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "js_dist",
+      "node_modules",
+      "ui",
+      "dist"
+    ]
+  }

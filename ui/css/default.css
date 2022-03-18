@@ -1,0 +1,86 @@
+html {
+    --word-popup-bg: black;
+    --word-popup-arrow-size: 13px;
+}
+
+.section {
+    margin-left: calc(10px + var(--indent) * 50px);
+}
+.section .title {
+    font-size: calc(2em - var(--indent) * 5px);
+}
+
+span.word:hover, .word.active {
+    background: #b7b7b7ab;
+    cursor: help;
+}
+
+.cet-container > .content {
+    height: 100%;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.arrow-left {
+    width: 0; 
+    height: 0; 
+    border-top: var(--word-popup-arrow-size) solid transparent;
+    border-bottom: var(--word-popup-arrow-size) solid transparent; 
+    border-right: var(--word-popup-arrow-size) solid var(--word-popup-bg);
+}
+
+.arrow-right {
+    width: 0; 
+    height: 0; 
+    border-top: var(--word-popup-arrow-size) solid transparent;
+    border-bottom: var(--word-popup-arrow-size) solid transparent;
+    border-left: var(--word-popup-arrow-size) solid var(--word-popup-bg);
+}
+
+.popup {
+    position: absolute;
+    width: max-content;
+    background: var(--word-popup-bg);
+    color: white;
+    padding: 8px;
+    max-width: 44vw;
+}
+
+.popup .content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.popup[data-arrow-pos="top"] .arrow-left {
+    position: absolute;
+    left: calc(1px - var(--word-popup-arrow-size));
+    top: 0px;
+}
+
+.popup[data-arrow-pos="top"] .arrow-right {
+	position: absolute;
+	right: calc(1px - var(--word-popup-arrow-size));
+	top: 0px;
+}
+
+.popup[data-arrow-pos="bottom"] .arrow-left {
+    position: absolute;
+    left: calc(1px - var(--word-popup-arrow-size));
+    bottom: 0px;
+}
+
+.popup[data-arrow-pos="bottom"] .arrow-right {
+    position: absolute;
+    right: calc(1px - var(--word-popup-arrow-size));
+    bottom: 0px;
+}
+
+/* Popups dict */
+.meaning-container {
+    margin-left: 20px;
+}
+
+.dict-images img {
+    height: 14vw;
+}
