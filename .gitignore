@@ -105,3 +105,5 @@ dist
 
 # Typescript build
 js_dist/
+
+package-lock.json
