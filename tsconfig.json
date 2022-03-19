@@ -7,7 +7,8 @@
       "outDir": "js_dist",
       "lib": ["dom", "ES2018"],
       "esModuleInterop": true,
-      "suppressImplicitAnyIndexErrors": true
+      "suppressImplicitAnyIndexErrors": true,
+      "noImplicitAny": false
     },
     "include": [
       "src/**/*.ts"
