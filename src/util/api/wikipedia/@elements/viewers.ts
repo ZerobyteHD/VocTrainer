@@ -1,6 +1,14 @@
 import wiki from "wikijs";
 import fetch from "node-fetch";
-import { search_wiki } from "../../wiktionary";
+import WiktionaryScraper, { WiktionaryDataResult } from "js-wiktionary-scraper";
+
+const wiki_api = new WiktionaryScraper();
+
+declare global {
+    interface Window {
+        data:WiktionaryDataResult;
+    }
+}
 
 async function wiki_get_image(src:string) {
     const parser = new DOMParser();
@@ -82,25 +90,9 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
         this.parent = parent;
         this.word_onclick = async(e:any)=>{
             if(e.target.className == "word") {
-                /*
-                var dict:any = await getWordEntry(e.target.innerText);
-                if(dict.title) {
-                    this.createPopup(parent, e.target, {content:"No definitions found"}, e.target.innerText);
-                } else {
-                    console.log(dict);
-                    var html = "";
-                    if(dict.length > 0)
-                    for(var meaning of dict[0].meanings) {
-                        html += `<div class="meaning-container"><span>As ${meaning.partOfSpeech}:</span><br>`;
-                        for(var def of meaning.definitions) {
-                            html += `<p>${def.definition}</p>`;
-                        }
-                        html += "</div>";
-                    }
-                    this.createPopup(parent, e.target, {content: html}, e.target.innerText+" "+dict[0].phonetic);
-                }*/
 
-                var data:any = await search_wiki(e.target.innerText);
+                var data:WiktionaryDataResult = await wiki_api.fetchData(e.target.innerText);
+                window.data = data;
                 if(data.error) {
                     this.createPopup(parent, e.target, {content:"Keine Definitionen gefunden"}, e.target.innerText);
                 } else {
@@ -118,6 +110,8 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                     if(data.meanings)
                     for(var type in data.meanings) {
                         var type_data = data.meanings[type];
+                        if(!type_data)continue;
+
                         html += `<b class="dict-word-title">As ${type.replace("_"," ")}</b><br><div class="meaning-container">`;
                         html += `<b class="dict-meaning-head">${type_data.head}</b><br><br>`;
                         for(var meaning of type_data.meanings) {

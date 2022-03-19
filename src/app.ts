@@ -1,15 +1,12 @@
 import { HTMLWikipediaSearchViewer, HTMLWikipediaPageViewer } from "./util/api/wikipedia/@elements/viewers";
-import WiktionaryScraper from "js-wiktionary-scraper";
 
 declare global {
     interface Window {
         HTMLWikipediaPageViewer: any;
         wiki_page:HTMLWikipediaPageViewer;
-        scraper:WiktionaryScraper;
     }
 }
 
-window.scraper = new WiktionaryScraper();
 
 window.HTMLWikipediaPageViewer = HTMLWikipediaPageViewer;
 
