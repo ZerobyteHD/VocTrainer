@@ -7,6 +7,7 @@
     <title>VocTrainer</title>
     <link rel="stylesheet" href="../../lib/materialize-v1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="../css/default.css">
+    <link rel="stylesheet" href="../css/wikipedia.sc.css">
     <style>
         .cet-window-title {
             font-size: 1.3rem!important;
@@ -19,15 +20,32 @@
 </head>
 <body>
     <div class="content">
-
+        <div class="row">
+            <div class="col s12 full-width">
+                <ul class="tabs">
+                    <li class="tab col s6"><a href="#home">Home</a></li>
+                    <li class="tab col s6"><a href="#wiki">Wiki</a></li>
+                </ul>
+            </div>
+            <div id="home" class="col s12 tab-content">
+                <h1>Test Titel</h1>
+                <p>Test text</p>
+            </div>
+            <div id="wiki" class="col s12 tab-content"></div>
+        </div>
     </div>
     <script src="../../lib/materialize-v1.0.0/js/materialize.min.js"></script>
     <script defer>
     </script>
     <script>
-        require("../../js_dist/util/titlebar.js");
-        require("../../js_dist/app.js");
-        require("../../js_dist/util/api/wiktionary.js");
+        if(typeof require !== "undefined") {
+            require("../../js_dist/util/titlebar.js");
+            require("../../js_dist/app.js");
+            require("../../js_dist/util/api/wiktionary.js");
+        }
+    </script>
+    <script defer>
+        var tabs = M.Tabs.init(document.querySelector("ul.tabs"), {swipeable: false, duration: 150});
     </script>
 </body>
 </html>

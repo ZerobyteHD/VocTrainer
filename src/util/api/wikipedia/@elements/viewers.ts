@@ -143,6 +143,39 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
             active_word.classList.toggle("active");
         }
     }
+    static wrapTextNode(textNode:Node) {
+        var spanNode = document.createElement("div");
+        spanNode.className = "word-group";
+        spanNode.innerHTML = this.contentToWords(textNode.textContent as string);
+        (textNode.parentNode as HTMLElement).replaceChild(spanNode, textNode);
+    }
+    static recursiveHtmlToWords(element:HTMLElement) {
+        if(!element)return;
+        if(element.childNodes) {
+            // @ts-ignore
+            for(var child_node of element.childNodes) {
+                if(child_node.nodeType == 3) {
+                    this.wrapTextNode(child_node);
+                } else {
+                    if(child_node.tagName) {
+                        this.recursiveHtmlToWords(child_node);
+                    }
+                }
+            }
+        }
+    }
+    static htmlToWords(raw_html:string):string {
+        // "//" -> "https://"
+        raw_html = raw_html.replace(/((?:srcset|src)=")(\/\/)/g, "$1https://");
+
+        // wiki-links -> window.wiki_page.load
+        raw_html = raw_html.replace(/href="\/wiki\/([a-zA-Z_-]{1,})"/g, `href="javascript:window.wiki_page.load('$1')"`);
+
+        var div = document.createElement("div");
+        div.innerHTML = raw_html;
+        this.recursiveHtmlToWords(div);
+        return div.innerHTML;
+    }
     createPopup(parent:HTMLElement, element:HTMLElement, entry:any, title:string) {
         HTMLWikipediaPageViewer.resetOverlays();
 
@@ -205,7 +238,12 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
             top: rect.top + this.parent.scrollTop
         }
     }
-    write_sections(object:any, parent:any=null, indentLevel:number=0) {
+    static getHeadingFromIndent(identLevel:number=0):string {
+        identLevel += 1;
+        if(identLevel > 6)identLevel = 6;
+        return "h"+identLevel;
+    }
+    write_sections(object:any, parent:HTMLElement|null=null, indentLevel:number=0) {
         if(!parent)parent = this;
 
         var div = document.createElement("div");
@@ -214,7 +252,8 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
         div.style.setProperty("--indent", String(indentLevel));
         parent.appendChild(div);
 
-        div.innerHTML = `<span class="title">${HTMLWikipediaPageViewer.contentToWords(object.title)}</span><br><p class="section-content">${HTMLWikipediaPageViewer.contentToWords(object.content)}</p>`;
+        var h:string = HTMLWikipediaPageViewer.getHeadingFromIndent(indentLevel);
+        div.innerHTML = `<${h} class="title">${HTMLWikipediaPageViewer.contentToWords(object.title)}</${h}><br><p class="section-content">${HTMLWikipediaPageViewer.contentToWords(object.content)}</p>`;
         div.addEventListener("click", this.word_onclick);
         if(object?.items) {
             for(var item of object.items) {
@@ -222,14 +261,28 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
             }
         }
     }
+    write_html(raw_html:string, parent:HTMLElement|null=null) {
+        if(!parent)parent = this;
+        var div = document.createElement("div");
+        div.className = "raw-wiki wikipedia";
+        div.innerHTML = HTMLWikipediaPageViewer.htmlToWords(raw_html);
+        this.appendChild(div);
+    }
     async load(title:string) {
         this.innerHTML = "";
         this.__title = title;
         var res:any = await this._wiki.page(this.__title);
 
+        // Style: sections, no img etc
         var content = await res.content();
         for(var section of content) {
             this.write_sections(section);
         }
+        
+        /* Raw html */
+        /*
+        var html = await res.html();
+        this.write_html(html);
+        */
     }
 }
