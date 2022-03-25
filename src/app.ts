@@ -1,9 +1,12 @@
 import { HTMLWikipediaSearchViewer, HTMLWikipediaPageViewer } from "./util/api/wikipedia/@elements/viewers";
+import ConfettiRenderer from "./util/animation/confetti";
 
 declare global {
     interface Window {
         HTMLWikipediaPageViewer: any;
         wiki_page:HTMLWikipediaPageViewer;
+        animation_renderer: HTMLCanvasElement;
+        test: ConfettiRenderer;
     }
 }
 
@@ -16,7 +19,13 @@ customElements.define("wiki-page-viewer", HTMLWikipediaPageViewer);
 
 function main():void {
     const page = document.querySelector(".cet-container > .content") as HTMLElement;
+    const cet_container = document.querySelector(".cet-container") as HTMLElement;
     const wiki_tab = document.querySelector("#wiki") as HTMLElement;
+    const animation_renderer = document.querySelector("#animation-renderer") as HTMLCanvasElement;
+    window.animation_renderer = animation_renderer;
+
+    window.test = new ConfettiRenderer(page, animation_renderer);
+    window.test.playFor(5000);
 
     var wiki_elem = document.createElement("wiki-search-viewer") as HTMLWikipediaSearchViewer;
     wiki_elem.setup();

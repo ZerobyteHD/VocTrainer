@@ -35,9 +35,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 input {
+    width: calc(100% - 20px)!important;
     padding-left: 20px!important;
     color: var(--sizzling-red)!important;
     background-color: var(--eerie-black-light)!important;
+}
+
+.cet-container {
+    overflow: hidden!important;
 }
 
 .cet-container > .content, body > .content {
@@ -78,7 +83,6 @@ span.word:hover, .word.active {
     color: var(--sizzling-red);
     transform: translateY(-8px)scale(1.2);
     display: inline-block;
-    padding: 4px;
     cursor: help;
 }
 
@@ -175,4 +179,27 @@ span.word:hover, .word.active {
     width: 90vw;
     margin-left: 5vw;
     margin-top: 20px;
+}
+
+/* Animationen */
+#animation-renderer {
+    display: block;
+    z-index: 999999;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* wiki search */
+.preview-container[data-active] {
+    width: 100%;
+    background-color: var(--eerie-black-light);
+    padding: 5px 20px;
+    border-bottom: 1px solid var(--sizzling-red);
+    box-shadow: 0 1px 0 0 var(--sizzling-red);
+}
+
+#wiki-search {
+    margin-bottom: 0!important;
 }

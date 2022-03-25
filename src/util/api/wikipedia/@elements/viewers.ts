@@ -22,7 +22,7 @@ async function wiki_get_image(src:string) {
     var doc = parser.parseFromString(html, "text/html");
     var url = doc.querySelector(".fullMedia .internal")?.getAttribute("href");
     if(!url?.startsWith("https")) {
-        url = url.replace("//","https://");
+        url = url?.replace("//","https://");
     }
     return url;
 }
@@ -53,6 +53,7 @@ export class HTMLWikipediaSearchViewer extends HTMLElement {
 
         this.input = document.createElement("input");
         this.input.type = "text";
+        this.input.id = "wiki-search";
         this.input.placeholder = "Auf Wikipedia.org suchen...";
         div.appendChild(this.input);
 
@@ -65,7 +66,11 @@ export class HTMLWikipediaSearchViewer extends HTMLElement {
             window.clearTimeout(this.intervall);
             this.intervall = window.setTimeout(async()=>{
                 var query = this.input?.value;
-                if(query == "")return;
+                if(query == "") {
+                    this.preview.innerHTML = "";
+                    this.preview.dataset.active = false;
+                    return;
+                }
 
                 var response:object = await this._wiki.search(query);
                 var full_res:Array<string> = response["results"];
@@ -80,6 +85,7 @@ export class HTMLWikipediaSearchViewer extends HTMLElement {
                     div2.innerHTML = `<a href="javascript:window.wiki_page.load('${page}')">${page}</a>`;
                     this.preview.appendChild(div2);
                 }
+                this.preview.dataset.active = true;
             }, 1000);
         });
 
@@ -120,7 +126,7 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                         html += `<div class="dict-images">`;
                         for(var image of data.images) {
                             var img_url = await wiki_get_image("https://en.wiktionary.org"+image.url);
-                            html += `<img src="${img_url}" alt="${image.caption}" title="${image.caption}">`;
+                            html += `<img class="materialboxed" src="${img_url}" alt="${image.caption}" title="${image.caption}">`;
                         }
                         html += "</div>";
                     }
@@ -143,11 +149,15 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                     // Popup zeigen
                     this.createPopup(parent, e.target, {content: html}, e.target.innerText);
 
+                    // @ts-ignore
+                    M.Materialbox.init(document.querySelectorAll(".materialboxed"));
                     /**
                      * Fehlt:
                      * Pronunciation, IPA
                      */
                 }
+            } else {
+                HTMLWikipediaPageViewer.resetOverlays();
             }
         }
 
@@ -172,7 +182,6 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
     static resetOverlays() {
         var old = document.querySelector(".popup");
         if(old)old.remove();
-        // @ts-ignore
         for(var active_word of document.querySelectorAll(".word.active")) {
             active_word.classList.toggle("active");
         }
@@ -195,13 +204,12 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
     static recursiveHtmlToWords(element:HTMLElement):void {
         if(!element)return;
         if(element.childNodes) {
-            // @ts-ignore
             for(var child_node of element.childNodes) {
                 if(child_node.nodeType == 3) {
                     this.wrapTextNode(child_node);
                 } else {
-                    if(child_node.tagName) {
-                        this.recursiveHtmlToWords(child_node);
+                    if((child_node as HTMLElement).tagName) {
+                        this.recursiveHtmlToWords(child_node as HTMLElement);
                     }
                 }
             }

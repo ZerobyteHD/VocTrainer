@@ -5,11 +5,12 @@
       "module": "commonjs",
       "sourceMap": true,
       "outDir": "js_dist",
-      "lib": ["dom", "ES2018"],
+      "lib": ["dom", "ES2018", "dom.iterable"],
       "esModuleInterop": true,
       "suppressImplicitAnyIndexErrors": true,
       "noImplicitAny": false,
-      "downlevelIteration": true
+      "downlevelIteration": true,
+      "removeComments": true
     },
     "include": [
       "src/**/*.ts"
