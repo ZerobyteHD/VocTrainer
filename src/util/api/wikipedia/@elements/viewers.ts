@@ -224,20 +224,24 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
         // Dem ELement die Klasse "active" geben
         element.classList.toggle("active");
 
+        // Dokumentmaße
         var doc_width = window.innerWidth;
         var doc_height = window.innerHeight;
 
+        // Elementposition und offset
         var el_offset = this.getElementOffset(element);
         var el_pos = element.getBoundingClientRect();
         /*   Pfeilrichtung      Pfeilposition */
         var pos_screen_side_X, pos_screen_side_Y;
         
+        // Pfeilrichtung bestimmen
         if(el_pos.left < doc_width/2) {
             pos_screen_side_X = "left";
         } else {
             pos_screen_side_X = "right";
         }
 
+        // Pfeilposition bestimmen
         if(el_pos.top < doc_height/2) {
             pos_screen_side_Y = "top";
         } else {
@@ -253,8 +257,10 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
 
         parent.appendChild(popup);
 
+        // BoundingClientRect gibt die aktuelle Position und Größe des Elementes
         var rect = popup.getBoundingClientRect();
 
+        // Anpassung
         var changeX = 0;
         var changeY = 0;
         if(pos_screen_side_X == "left") {
@@ -274,6 +280,11 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
 
         popup.style.visibility = "";
     }
+    /**
+     * Ermittelt die Position des Elementes relativ zum Fenster
+     * @param element Element
+     * @returns Element-Offset
+     */
     getElementOffset(element:HTMLElement) {
         const rect = element.getBoundingClientRect();
         return {
@@ -281,11 +292,22 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
             top: rect.top + this.parent.scrollTop
         }
     }
+    /**
+     * Gibt den Tag eines HTML-Heading-Elementes wieder
+     * @param identLevel Einzug
+     * @returns HTML-Heading-Element Tag
+     */
     static getHeadingFromIndent(identLevel:number=0):string {
         identLevel += 1;
         if(identLevel > 6)identLevel = 6;
         return "h"+identLevel;
     }
+    /**
+     * Rekursive Funktion, um die Wikipedia Sektionen darzustellen
+     * @param object Objekt der Sektion
+     * @param parent Elternelement
+     * @param indentLevel Einzug
+     */
     write_sections(object:any, parent:HTMLElement|null=null, indentLevel:number=0) {
         if(!parent)parent = this;
 
@@ -304,6 +326,11 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
             }
         }
     }
+    /**
+     * Gegenpol zu write_sections, schreibt direkt HTML zum Dokument
+     * @param raw_html HTML-String
+     * @param parent Elternelement
+     */
     write_html(raw_html:string, parent:HTMLElement|null=null) {
         if(!parent)parent = this;
         var div = document.createElement("div");
@@ -311,18 +338,22 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
         div.innerHTML = HTMLWikipediaPageViewer.htmlToWords(raw_html);
         this.appendChild(div);
     }
+    /**
+     * Wikipediaseite laden
+     * @param title Titel der Seite
+     */
     async load(title:string) {
         this.innerHTML = "";
         this.__title = title;
         var res:any = await this._wiki.page(this.__title);
 
-        // Style: sections, no img etc
+        // Alte Methode mit Sektionen, sehr performancesparend
         var content = await res.content();
         for(var section of content) {
             this.write_sections(section);
         }
         
-        /* Raw html */
+        // Neue Methode, unfassbar performancelastig (wirklich seeehr) 
         /*
         var html = await res.html();
         this.write_html(html);
