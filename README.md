@@ -13,6 +13,8 @@
 `package.json`: NodePackageManager Deklarationsdatei
 `README.md`: Diese Datei
 `tsconfig.json`: TypescriptCompiler Config Datei
+## Eigene Module
+`js-wiktionary-scraper` siehe https://www.npmjs.com/package/js-wiktionary-scraper
 ## Funktion
 VocTrainer nutzt das NODEJS Modul electron.js zur Darstellug von interaktiven Web-Dokumenten
 Als Programmiersprache wird Typescript benutzt, dass zu JavaScript (CommonJS) konvertiert wird. Die Typescript Compiler Optionen sind in `tsconfig.json` zu finden. Zum Kompilieren wird der Typescriptcompiler (tsc) benötigt

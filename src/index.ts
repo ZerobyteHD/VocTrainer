@@ -73,7 +73,7 @@ function createWindow():void {
     });
 
     // App beenden, wenn das Hauptfenster geschlossen wird
-    mainWin.on("close", function(e) {
+    mainWin.on("close", e => {
         e.preventDefault();
         QUIT();
     });
@@ -95,7 +95,7 @@ if(!InstanceLock) {
 // app events
 app.on("window-all-closed", () => {
     app.quit();
-})
+});
 app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();

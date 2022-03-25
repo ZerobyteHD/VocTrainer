@@ -10,6 +10,11 @@ declare global {
     }
 }
 
+/**
+ * Extrahiert den Source Link für ein Bild
+ * @param src Bildquelle, z.B. https://commons.wikimedia.org/wiki/File:Stele_of_Vultures_detail_01a.jpg => https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Stele_of_Vultures_detail_01a.jpg/800px-Stele_of_Vultures_detail_01a.jpg?20171004232540
+ * @returns 
+ */
 async function wiki_get_image(src:string) {
     const parser = new DOMParser();
     var res = await fetch(src);
@@ -39,6 +44,9 @@ export class HTMLWikipediaSearchViewer extends HTMLElement {
         this.preview = null;
         this.intervall = 0;
     }
+    /**
+     * Element Setup, erzeugt z.B. die Suchleiste
+     */
     async setup() {
         var div = document.createElement("div");
         div.className = "search-container";

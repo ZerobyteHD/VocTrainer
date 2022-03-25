@@ -8,7 +8,8 @@
       "lib": ["dom", "ES2018"],
       "esModuleInterop": true,
       "suppressImplicitAnyIndexErrors": true,
-      "noImplicitAny": false
+      "noImplicitAny": false,
+      "downlevelIteration": true
     },
     "include": [
       "src/**/*.ts"
