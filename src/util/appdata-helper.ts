@@ -3,6 +3,9 @@ import * as path from "path";
 
 export const APPDATA = process.env.APPDATA;
 
+/**
+ * Hilfsklasse für den Umgang mit Daten in %APPDATA%
+ */
 export class APPDATA_HELPER {
     appdata_dir:string;
     data_file:string;

@@ -1,3 +1,5 @@
+/* Definiert die Titelleiste im Hauptfenster */
+
 import { Titlebar, Color } from "custom-electron-titlebar";
 import * as path from "path";
 
@@ -9,7 +11,6 @@ declare global {
     }
 }
 
-/* EVENTS */
 
 const DOM_READY:Event = new Event("electron-page-ready");
 

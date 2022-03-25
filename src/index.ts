@@ -1,3 +1,4 @@
+/* Imports */
 import {app, BrowserWindow, Menu, Tray, ipcMain, globalShortcut, MenuItem} from "electron";
 // @ts-ignore
 import {setupTitlebar, attachTitlebarToWindow } from "custom-electron-titlebar/main";
@@ -5,6 +6,7 @@ import * as electron from "electron";
 import * as path from "path";
 import {APPDATA, APPDATA_HELPER} from "./util/appdata-helper";
 
+/* Prozessinfo */
 console.log("[STARTUP] dirname="+__dirname);
 console.log("Versions: ", process.versions);
 
@@ -29,19 +31,21 @@ function QUIT():void {
  * Erstellt die Fenster für die App
  */
 function createWindow():void {
-    // loading window
+    // Fenster für den Ladebildschirm
     var load_splash:BrowserWindow = new BrowserWindow({
         width: 450,
         height: 300,
         frame: false,
         show: false
     });
+    // HTML Datei laden
     load_splash.loadFile(path.join(__dirname, "../ui/html/splash.html"));
     load_splash.once("ready-to-show", ()=>{
+        // Fenster zeigen, sobald es bereit ist
         load_splash.show();
     });
 
-    // create mainWin
+    // Hauptfenster erstellen
     mainWin = new BrowserWindow({
         width: 1200,
         height: 800,
@@ -53,12 +57,13 @@ function createWindow():void {
         show: false
     });
 
-    // Titlebar
+    // Windows Titelleiste
     setupTitlebar();
     attachTitlebarToWindow(mainWin);
 
     mainWin.loadFile(path.join(__dirname, "../ui/html/app.html"));
     mainWin.once("ready-to-show", ()=>{
+        // Wenn bereit, kurz noch warten, dann zeigen
         setTimeout(()=>{
             mainWin.show();
             mainWin.maximize();
@@ -67,6 +72,7 @@ function createWindow():void {
         }, SPLASHSCREEN_DELAY);
     });
 
+    // App beenden, wenn das Hauptfenster geschlossen wird
     mainWin.on("close", function(e) {
         e.preventDefault();
         QUIT();

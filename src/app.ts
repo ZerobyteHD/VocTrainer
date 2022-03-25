@@ -10,6 +10,7 @@ declare global {
 
 window.HTMLWikipediaPageViewer = HTMLWikipediaPageViewer;
 
+/* Benutzerdefinierte Elemente definieren */
 customElements.define("wiki-search-viewer", HTMLWikipediaSearchViewer);
 customElements.define("wiki-page-viewer", HTMLWikipediaPageViewer);
 
@@ -25,5 +26,7 @@ function main():void {
     wiki_tab.appendChild(window.wiki_page);
 }
 
+/* Ist der Electron Hauptprozess bereit? */
 if(window?.DOM_READY) main();
+/* sonst auf Event warten */
 else document.addEventListener("electron-page-ready", main);

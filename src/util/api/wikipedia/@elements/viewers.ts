@@ -17,15 +17,18 @@ async function wiki_get_image(src:string) {
     var doc = parser.parseFromString(html, "text/html");
     var url = doc.querySelector(".fullMedia .internal")?.getAttribute("href");
     if(!url?.startsWith("https")) {
-        url = url?.replace("//","https://");
+        url = url.replace("//","https://");
     }
     return url;
 }
 
+/**
+ * HTML-Element zur visualisierung einer Suche auf Wikipedia
+ */
 export class HTMLWikipediaSearchViewer extends HTMLElement {
-    _wiki:any;
-    max_results:number;
-    input:HTMLInputElement|null;
+    _wiki:any; // Wiki Such-API
+    max_results:number; // Maximalanzahl der Ergebnisse
+    input:HTMLInputElement|null; // Das HTML-Input-Element
     preview:any;
     intervall:number;
     constructor() {
@@ -40,10 +43,9 @@ export class HTMLWikipediaSearchViewer extends HTMLElement {
         var div = document.createElement("div");
         div.className = "search-container";
 
-        
         this.input = document.createElement("input");
         this.input.type = "text";
-        this.input.placeholder = "Type here";
+        this.input.placeholder = "Auf Wikipedia.org suchen...";
         div.appendChild(this.input);
 
         this.preview = document.createElement("div");
@@ -78,26 +80,34 @@ export class HTMLWikipediaSearchViewer extends HTMLElement {
     }
 }
 
+/**
+ * HTML-Element zur Darstellung einer Wikipediaseite
+ */
 export class HTMLWikipediaPageViewer extends HTMLElement {
-    _wiki:any;
-    __title:string;
-    parent:HTMLElement;
-    word_onclick:(this: HTMLDivElement, ev: MouseEvent) => any;
+    _wiki:any; // Wiki-API
+    __title:string; // Titel
+    parent:HTMLElement; // Elternelement
+    word_onclick:(this: HTMLDivElement, ev: MouseEvent) => any; // Onclick-Event, wenn man auf ein Wort klickt
     constructor(parent:HTMLElement) {
         super();
         this._wiki = wiki();
         this.__title = "";
         this.parent = parent;
         this.word_onclick = async(e:any)=>{
+            // geklicktes Element hat die Klasse "word"
             if(e.target.className == "word") {
-
+                // Suche nach dem Text des Wortelementes
                 var data:WiktionaryDataResult = await wiki_api.fetchData(e.target.innerText);
+                // Daten werden zwischengespeichert (für Debugging)
                 window.data = data;
+                // Ist ein Fehler aufgetreten?
                 if(data.error) {
+                    // Wenn ja, wurde keine Defintion gefunden
                     this.createPopup(parent, e.target, {content:"Keine Definitionen gefunden"}, e.target.innerText);
                 } else {
+                    // Wenn nicht:
                     var html = "";
-
+                    // Wenn es Bilder zu diesem Wort gibt, werden diese in das Popup eingebaut
                     if(data.images) {
                         html += `<div class="dict-images">`;
                         for(var image of data.images) {
@@ -106,7 +116,7 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                         }
                         html += "</div>";
                     }
-
+                    // Bedeutungen
                     if(data.meanings)
                     for(var type in data.meanings) {
                         var type_data = data.meanings[type];
@@ -122,19 +132,35 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                         }
                         html += "</div>";
                     }
+                    // Popup zeigen
                     this.createPopup(parent, e.target, {content: html}, e.target.innerText);
+
+                    /**
+                     * Fehlt:
+                     * Pronunciation, IPA
+                     */
                 }
             }
         }
 
         window.addEventListener("resize", ()=>{
+            // Wenn die Größe des Fensters verändert wird, werden alle Overlays entfernt
+            // Grund: Implementierung einer Anpassung zu aufwändig
             HTMLWikipediaPageViewer.resetOverlays();
         });
     }
+    /**
+     * Konvertiert einen String zu einem HTML String mit "spans"
+     * @param content Zu konvertierender String
+     * @returns HTML String mit Span-Elementen
+     */
     static contentToWords(content:string):string {
         var wordRegex = /([a-zA-Z\'\-]{1,})/g;
         return content.replace(wordRegex, "<span class='word'>$1</span>");
     }
+    /**
+     * Entfernt alle Overlays (Popups)
+     */
     static resetOverlays() {
         var old = document.querySelector(".popup");
         if(old)old.remove();
@@ -143,13 +169,22 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
             active_word.classList.toggle("active");
         }
     }
+    /**
+     * Umhüllt eine HTML-Text-Node mit einem Span-Element
+     * @param textNode 
+     */
     static wrapTextNode(textNode:Node) {
         var spanNode = document.createElement("div");
         spanNode.className = "word-group";
         spanNode.innerHTML = this.contentToWords(textNode.textContent as string);
         (textNode.parentNode as HTMLElement).replaceChild(spanNode, textNode);
     }
-    static recursiveHtmlToWords(element:HTMLElement) {
+    /**
+     * Rekursive Konvertierung von Text-Nodes als Kindelement von element zu Span-Elementen
+     * @param element Startelement
+     * @returns undefined
+     */
+    static recursiveHtmlToWords(element:HTMLElement):void {
         if(!element)return;
         if(element.childNodes) {
             // @ts-ignore
@@ -176,9 +211,17 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
         this.recursiveHtmlToWords(div);
         return div.innerHTML;
     }
+    /**
+     * Erzeugt ein Popup
+     * @param parent Elternelement
+     * @param element Das Element, an dem sich das Popup orientieren soll
+     * @param entry ungenutzt
+     * @param title ungenutzt
+     */
     createPopup(parent:HTMLElement, element:HTMLElement, entry:any, title:string) {
         HTMLWikipediaPageViewer.resetOverlays();
 
+        // Dem ELement die Klasse "active" geben
         element.classList.toggle("active");
 
         var doc_width = window.innerWidth;
