@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,19 +24,25 @@
         <div class="row">
             <div class="col s12 full-width">
                 <ul class="tabs">
-                    <li class="tab col s6"><a href="#home">Home</a></li>
-                    <li class="tab col s6"><a href="#wiki">Wiki</a></li>
+                    <li class="tab col s4"><a href="#home">Home</a></li>
+                    <li class="tab col s4"><a href="#wiki">Wiki</a></li>
+                    <li class="tab col s4"><a href="#trainer">Training</a></li>
                 </ul>
             </div>
+            <!-- TABS -->
             <div id="home" class="col s12 tab-content">
                 <h1>Test Titel</h1>
                 <p>Test text</p>
             </div>
             <div id="wiki" class="col s12 tab-content"></div>
+            <div id="trainer" class="col s12 tab-content">
+                
+            </div>
         </div>
     </div>
     <script src="../../lib/materialize-v1.0.0/js/materialize.min.js"></script>
     <script>
+        /* Für Tests im Browser in einem IF-Statement */
         if(typeof require !== "undefined") {
             require("../../js_dist/util/titlebar.js");
             require("../../js_dist/app.js");
@@ -44,6 +50,7 @@
         }
     </script>
     <script defer>
+        /* Materialize Initialisierung */
         var tabs = M.Tabs.init(document.querySelector("ul.tabs"), {swipeable: false, duration: 150});
     </script>
 </body>

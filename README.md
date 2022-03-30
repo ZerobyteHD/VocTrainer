@@ -13,22 +13,28 @@
 - `README.md`: Diese Datei
 - `tsconfig.json`: TypescriptCompiler Config Datei
 
+## Bibliotheken
+
+- [Materialize](https://materializecss.com/) siehe `/lib/materialize-v1.0.0`
+
 ## Eigene Module
 
-`js-wiktionary-scraper` siehe https://www.npmjs.com/package/js-wiktionary-scraper
+`js-wiktionary-scraper` siehe [auf npmjs.org](https://www.npmjs.com/package/js-wiktionary-scraper)
 
 ## Funktion
 
-VocTrainer nutzt das NODEJS Modul electron.js zur Darstellug von interaktiven Web-Dokumenten
-Als Programmiersprache wird Typescript benutzt, dass zu JavaScript (CommonJS) konvertiert wird. Die Typescript Compiler Optionen sind in `tsconfig.json` zu finden. Zum Kompilieren wird der Typescriptcompiler (tsc) benötigt
-Die package Definition ist in `package.json` zu finden
+VocTrainer nutzt das NODEJS Modul [ELECTRON](https://www.electronjs.org/) zur Darstellug von interaktiven Web-Dokumenten
+
+Als Programmiersprache wird Typescript benutzt, dass zu JavaScript (CommonJS) konvertiert wird. Die Typescript Compiler Optionen sind in `tsconfig.json` zu finden.
+
+Die package Definition ist in `package.json` zu finden.
 
 ## Distribution
 
 ### Building
 Es wird benötigt:
-- Node Package Manager (npm + nodeJS)
-- Typescript Compiler (tsc)
+- NodeJS + Node [Package Manager](https://nodejs.org/) (npm)
+- [Typescript](https://www.typescriptlang.org/) Compiler (tsc)
 
 Danach müssen alle benötigten Node Module installiert werden:
 
