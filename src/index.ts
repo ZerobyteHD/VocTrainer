@@ -10,6 +10,17 @@ import {APPDATA, APPDATA_HELPER} from "./util/appdata-helper";
 console.log("[STARTUP] dirname="+__dirname);
 console.log("Versions: ", process.versions);
 
+/* Prozessargumente */
+var argv_switches = {debug:false, silent:false};
+for(var arg of process.argv) {
+    if(arg.startsWith("--")) {
+        var arg_name = arg.replace(/\-\-/g, "");
+        if(argv_switches[arg_name]) {
+            argv_switches[arg_name] = true;
+        }
+    }
+}
+
 const InstanceLock:boolean = app.requestSingleInstanceLock();
 const SPLASHSCREEN_DELAY:number = 1000;
 const appdata:APPDATA_HELPER = new APPDATA_HELPER("VocTrainer", "data.json");
@@ -68,6 +79,7 @@ function createWindow():void {
             mainWin.show();
             mainWin.maximize();
             load_splash.destroy();
+            if(argv_switches.debug)
             mainWin.webContents.openDevTools({"mode":"detach"});
         }, SPLASHSCREEN_DELAY);
     });

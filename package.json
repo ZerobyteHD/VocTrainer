@@ -6,7 +6,7 @@
   "scripts": {
     "tsc": "tsc",
     "start": "electron .",
-    "test": "tsc && electron .",
+    "test": "tsc && electron . --debug",
     "dist": "tsc && electron-builder"
   },
   "author": "Nico Opheys",

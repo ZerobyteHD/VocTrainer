@@ -25,4 +25,13 @@ Die package Definition ist in `package.json` zu finden
 
 ## Distribution
 
-Das Projekt kann mit dem Shell Command `npm run dist` gepackaged werden
+### Building
+Es wird benötigt:
+- Node Package Manager (npm + nodeJS)
+- Typescript Compiler (tsc)
+
+Danach müssen alle benötigten Node Module installiert werden:
+
+`> npm install`
+
+Das Projekt kann mit dem Shell Command `npm run dist` gepackaged werden.
