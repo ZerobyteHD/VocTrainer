@@ -36,7 +36,7 @@
             </div>
             <div id="wiki" class="col s12 tab-content"></div>
             <div id="trainer" class="col s12 tab-content">
-                
+                <h1>Training</h1>
             </div>
         </div>
     </div>
@@ -49,9 +49,17 @@
             require("../../js_dist/util/api/wiktionary.js");
         }
     </script>
-    <script defer>
-        /* Materialize Initialisierung */
-        var tabs = M.Tabs.init(document.querySelector("ul.tabs"), {swipeable: false, duration: 150});
+    <script>
+        /* !!! Problem: defer funktioniert inline nicht */
+        /* Materialize Initialisierungen */
+        function M_init() {
+            window.tabs = M.Tabs.init(document.querySelector("ul.tabs"), {swipeable: false, duration: 150});
+        }
+        if(["complete", "interactive"].includes(document.readyState)) {
+            M_init();
+        } else {
+            document.addEventListener("DOMContentLoaded", M_init);
+        }
     </script>
 </body>
 </html>

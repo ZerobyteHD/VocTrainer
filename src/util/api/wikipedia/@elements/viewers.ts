@@ -357,22 +357,23 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
     /**
      * Wikipediaseite laden
      * @param title Titel der Seite
+     * @param load_type 1 | 2 Die Methode zur Darstellung der Wikiseite
      */
-    async load(title:string) {
+    async load(title:string, load_type=1) {
         this.innerHTML = "";
         this.__title = title;
         var res:any = await this._wiki.page(this.__title);
 
-        // Alte Methode mit Sektionen, sehr performancesparend
-        var content = await res.content();
-        for(var section of content) {
-            this.write_sections(section);
-        }
-        
-        // Neue Methode, unfassbar performancelastig (wirklich seeehr) 
-        /*
-        var html = await res.html();
-        this.write_html(html);
-        */
+        // Alte Methode mit Sektionen, performancesparend
+        if(load_type === 1) {
+            var content = await res.content();
+            for(var section of content) {
+                this.write_sections(section);
+            }
+        } else if(load_type === 2) {
+            // Neue Methode, unfassbar performancelastig
+            var html = await res.html();
+            this.write_html(html);
+        } else throw "Unknown load type";
     }
 }

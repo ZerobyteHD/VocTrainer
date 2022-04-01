@@ -5,7 +5,7 @@ import * as path from "path";
 
 declare global {
     interface Window {
-        page: any;
+        page: HTMLElement;
         titlebar: any;
         DOM_READY: number;
     }

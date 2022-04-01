@@ -38,10 +38,12 @@ export default class ConfettiRenderer {
     }
 
     playFor(duration:number) {
-        this.start();
-        setTimeout(()=>{
-            this.stop();
-        }, duration);
+        if(!this.isActive) {
+            this.start();
+            setTimeout(()=>{
+                this.stop();
+            }, duration);
+        }
     }
 
     resetParticle(particle: Particle, width:number, height:number):Particle {
