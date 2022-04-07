@@ -12,7 +12,7 @@ html {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-    width: 1em;
+    width: 0.5em;
 }
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -39,6 +39,14 @@ input {
     padding-left: 20px!important;
     color: var(--sizzling-red)!important;
     background-color: var(--eerie-black-light)!important;
+}
+
+input::placeholder {
+    color: gray;
+    transition: color 0.5s;
+}
+input:hover::placeholder, input:focus::placeholder {
+    color: white;
 }
 
 .cet-container {
@@ -81,7 +89,7 @@ span.word:hover, .word.active {
     background: var(--indigo-dye);
     cursor: help;
     color: var(--sizzling-red);
-    transform: translateY(-8px)scale(1.2);
+    transform: translateY(-8px) scale(1.2);
     display: inline-block;
     cursor: help;
 }

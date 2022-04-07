@@ -26,15 +26,15 @@ export function getPropertyFromPattern(data: APPDATA_DATA_OBJECT, pattern: strin
     return current;
 }
 
-export class APPDATA {
+export class APPDATA_DATA {
     data: APPDATA_DATA_OBJECT;
 
     constructor(_data: APPDATA_DATA_OBJECT) {
-        data = _data;
+        this.data = _data;
     }
     hasProperty(pattern: string):boolean {
         try {
-            var res = getPropertyFromPattern(pattern);
+            var res = getPropertyFromPattern(this.data, pattern);
             return true;
         } catch(e:any) {
             return false;
@@ -42,7 +42,7 @@ export class APPDATA {
     }
     getProperty(pattern: string):APPDATA_DATA_OBJECT|any|null {
         if(this.hasProperty(pattern)){
-            return getPropertyFromPattern(pattern);
+            return getPropertyFromPattern(this.data, pattern);
         } else return null;
     }
 }

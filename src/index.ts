@@ -11,13 +11,12 @@ console.log("[STARTUP] dirname="+__dirname);
 console.log("Versions: ", process.versions);
 
 /* Prozessargumente */
+console.log(process.argv);
 var argv_switches = {debug:false, silent:false};
 for(var arg of process.argv) {
     if(arg.startsWith("--")) {
         var arg_name = arg.replace(/\-\-/g, "");
-        if(argv_switches[arg_name]) {
-            argv_switches[arg_name] = true;
-        }
+        argv_switches[arg_name] = true;
     }
 }
 

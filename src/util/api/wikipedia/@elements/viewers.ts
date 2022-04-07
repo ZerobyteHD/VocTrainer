@@ -274,7 +274,7 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
         parent.appendChild(popup);
 
         // BoundingClientRect gibt die aktuelle Position und Größe des Elementes
-        var rect = popup.getBoundingClientRect();
+        var rect = popup.getBoundingClientRect(); // popup rect
 
         // Anpassung
         var changeX = 0;
@@ -282,12 +282,12 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
         if(pos_screen_side_X == "left") {
             changeX = element.getBoundingClientRect().width + 20;
         } else {
-            changeX = -rect.width - 20;
+            changeX = -rect.width - 27;
         }
         if(pos_screen_side_Y == "top") {
-            changeY = -element.getBoundingClientRect().height - 8;
+            changeY = 5;
         } else {
-            changeY = -rect.height - 5;
+            changeY = -rect.height + 27;
         }
 
         // Position
