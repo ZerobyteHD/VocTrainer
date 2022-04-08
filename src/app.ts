@@ -29,7 +29,7 @@ function main():void {
     const animation_renderer = document.querySelector("#animation-renderer") as HTMLCanvasElement;
     window.animation_renderer = animation_renderer;
 
-    /* Confetti */
+    /* Confetti Test */
     window.test = new ConfettiRenderer(page, animation_renderer);
     window.test.playFor(5000);
 
