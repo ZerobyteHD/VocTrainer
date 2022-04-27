@@ -1,6 +1,7 @@
 import wiki from "wikijs";
 import fetch from "node-fetch";
 import WiktionaryScraper, { WiktionaryDataResult } from "js-wiktionary-scraper";
+import Popup from "../../../elements/popup";
 
 const wiki_api = new WiktionaryScraper();
 
@@ -188,7 +189,7 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
     }
     /**
      * Umhüllt eine HTML-Text-Node mit einem Span-Element
-     * @param textNode 
+     * @param textNode Die Text-Node
      */
     static wrapTextNode(textNode:Node) {
         var spanNode = document.createElement("div");
@@ -199,7 +200,6 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
     /**
      * Rekursive Konvertierung von Text-Nodes als Kindelement von element zu Span-Elementen
      * @param element Startelement
-     * @returns undefined
      */
     static recursiveHtmlToWords(element:HTMLElement):void {
         if(!element)return;

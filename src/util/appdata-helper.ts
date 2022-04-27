@@ -70,6 +70,10 @@ export class APPDATA_HELPER {
             fs.writeFileSync(this.data_file, "{}");
         }
     }
+    /**
+     * Liest die die Konfigurationsdatei
+     * @returns JSON parsed string
+     */
     read() {
         var data = fs.readFileSync(this.data_file).toString();
         return JSON.parse(data);
