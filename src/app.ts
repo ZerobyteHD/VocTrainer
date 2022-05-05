@@ -41,7 +41,7 @@ function main():void {
     wiki_tab.appendChild(window.wiki_page);
 
     /* Trainer */
-    var trainer = new HTMLTrainerElement([{word:"test",translation:"_test"}]);
+    var trainer = new HTMLTrainerElement([{word:"test",translation:"_test", type:"noun", hint:"just testing"}]);
     trainer.setMode("scanner");
     trainer_tab.appendChild(trainer);
 }

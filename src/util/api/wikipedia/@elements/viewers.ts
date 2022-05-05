@@ -1,15 +1,18 @@
 import wiki from "wikijs";
 import fetch from "node-fetch";
 import WiktionaryScraper, { WiktionaryDataResult } from "js-wiktionary-scraper";
-import Popup from "../../../elements/popup";
+import Popup from "../../../elements/popups";
 
 const wiki_api = new WiktionaryScraper();
 
 declare global {
     interface Window {
         data:WiktionaryDataResult;
+        UIPopup:typeof Popup
     }
 }
+
+window.UIPopup = Popup;
 
 /**
  * Extrahiert den Source Link für ein Bild
@@ -118,9 +121,12 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                 // Ist ein Fehler aufgetreten?
                 if(data.error) {
                     // Wenn ja, wurde keine Defintion gefunden
-                    this.createPopup(parent, e.target, {content:"Keine Definitionen gefunden"}, e.target.innerText);
+                    var popup = new Popup(parent, e.target, e.target.innerText);
+                    popup.setEntry({content:"Keine Definitionen gefunden"});
                 } else {
                     // Wenn nicht:
+                    var popup = new Popup(parent, e.target, e.target.innerText);
+
                     var html = "";
                     // Wenn es Bilder zu diesem Wort gibt, werden diese in das Popup eingebaut
                     if(data.images) {
@@ -148,7 +154,7 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                         html += "</div>";
                     }
                     // Popup zeigen
-                    this.createPopup(parent, e.target, {content: html}, e.target.innerText);
+                    popup.setEntry({content: html});
 
                     // @ts-ignore
                     M.Materialbox.init(document.querySelectorAll(".materialboxed"));
@@ -158,14 +164,14 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                      */
                 }
             } else {
-                HTMLWikipediaPageViewer.resetOverlays();
+                Popup.resetAll();
             }
         }
 
         window.addEventListener("resize", ()=>{
             // Wenn die Größe des Fensters verändert wird, werden alle Overlays entfernt
             // Grund: Implementierung einer Anpassung zu aufwändig
-            HTMLWikipediaPageViewer.resetOverlays();
+            Popup.resetAll();
         });
     }
     /**
@@ -176,16 +182,6 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
     static contentToWords(content:string):string {
         var wordRegex = /([a-zA-Z\'\-]{1,})/g;
         return content.replace(wordRegex, "<span class='word'>$1</span>");
-    }
-    /**
-     * Entfernt alle Overlays (Popups)
-     */
-    static resetOverlays() {
-        var old = document.querySelector(".popup");
-        if(old)old.remove();
-        for(var active_word of document.querySelectorAll(".word.active")) {
-            active_word.classList.toggle("active");
-        }
     }
     /**
      * Umhüllt eine HTML-Text-Node mit einem Span-Element
@@ -226,87 +222,6 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
         div.innerHTML = raw_html;
         this.recursiveHtmlToWords(div);
         return div.innerHTML;
-    }
-    /**
-     * Erzeugt ein Popup
-     * @param parent Elternelement
-     * @param element Das Element, an dem sich das Popup orientieren soll
-     * @param entry ungenutzt
-     * @param title ungenutzt
-     */
-    createPopup(parent:HTMLElement, element:HTMLElement, entry:any, title:string) {
-        HTMLWikipediaPageViewer.resetOverlays();
-
-        // Dem ELement die Klasse "active" geben
-        element.classList.toggle("active");
-
-        // Dokumentmaße
-        var doc_width = window.innerWidth;
-        var doc_height = window.innerHeight;
-
-        // Elementposition und offset
-        var el_offset = this.getElementOffset(element);
-        var el_pos = element.getBoundingClientRect();
-        /*   Pfeilrichtung      Pfeilposition */
-        var pos_screen_side_X, pos_screen_side_Y;
-        
-        // Pfeilrichtung bestimmen
-        if(el_pos.left < doc_width/2) {
-            pos_screen_side_X = "left";
-        } else {
-            pos_screen_side_X = "right";
-        }
-
-        // Pfeilposition bestimmen
-        if(el_pos.top < doc_height/2) {
-            pos_screen_side_Y = "top";
-        } else {
-            pos_screen_side_Y = "bottom";
-        }
-
-        var popup = document.createElement("div");
-        popup.className = "popup";
-        popup.setAttribute("data-arrow-pos", pos_screen_side_Y);
-        popup.innerHTML = `<div class="arrow-${pos_screen_side_X}"></div><div onclick="HTMLWikipediaPageViewer.resetOverlays()" class="close-btn">X</div><div class="content"><div class="title">${title}</div><div class="entry">${entry.content}</div></div>`;
-
-        popup.style.visibility = "hidden";
-
-        parent.appendChild(popup);
-
-        // BoundingClientRect gibt die aktuelle Position und Größe des Elementes
-        var rect = popup.getBoundingClientRect(); // popup rect
-
-        // Anpassung
-        var changeX = 0;
-        var changeY = 0;
-        if(pos_screen_side_X == "left") {
-            changeX = element.getBoundingClientRect().width + 20;
-        } else {
-            changeX = -rect.width - 27;
-        }
-        if(pos_screen_side_Y == "top") {
-            changeY = 5;
-        } else {
-            changeY = -rect.height + 27;
-        }
-
-        // Position
-        popup.style.left = Math.max(el_offset.left+changeX, 0)+"px";
-        popup.style.top = Math.max(el_offset.top+changeY, 0)+"px";
-
-        popup.style.visibility = "";
-    }
-    /**
-     * Ermittelt die Position des Elementes relativ zum Fenster
-     * @param element Element
-     * @returns Element-Offset
-     */
-    getElementOffset(element:HTMLElement) {
-        const rect = element.getBoundingClientRect();
-        return {
-            left: rect.left + this.parent.scrollLeft,
-            top: rect.top + this.parent.scrollTop
-        }
     }
     /**
      * Gibt den Tag eines HTML-Heading-Elementes wieder

@@ -61,7 +61,7 @@ export class HTMLTrainerModeVocabularyScanner extends HTMLTrainerMode {
         </div>`;
         this.el_word = this.children[0].children[0].children[0] as HTMLSpanElement;
         this.el_translation = this.children[0].children[1].children[0] as HTMLSpanElement;
-        this.el_word_info = this.el_word.children[0];
+        this.el_word_info = this.el_word.children[0] as HTMLSpanElement;
     }
     next() {
         if(this.pointer >= this.data.length) {
@@ -99,13 +99,13 @@ export class HTMLTrainerModeInputWord extends HTMLTrainerMode {
                 <span>Abgeben</span>
             </div>
         </div>`;
-        this.input = this.children[0].children[1].children[0];
-        this.el_translation = this.children[0].children[0].children[1];
-        this.el_word_info = this.el_translation.children[0];
+        this.input = this.children[0].children[1].children[0] as HTMLInputElement;
+        this.el_translation = this.children[0].children[0].children[1] as HTMLSpanElement;
+        this.el_word_info = this.el_translation.children[0] as HTMLSpanElement;
 
         var btn_continue = this.children[0].children[1].children[1];
         btn_continue.addEventListener("click", ()=>{
-            var isRight = this.input.value.toLowerCase() == this.data[this.pointer].word.toLowerCase();
+            var isRight = this.input?.value.toLowerCase() == this.data[this.pointer].word.toLowerCase();
             if(isRight)this.callback("right-answer");
             this.next();
         });

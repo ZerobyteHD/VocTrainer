@@ -2,10 +2,10 @@
 
 ## To-dos
 
-- Popup als eigene Klasse, Ladeanimation fehlt
-- Trainingstab
-- Graph?
-- WiktionaryAPI verbessern
+- [x] Popup als eigene Klasse, Ladeanimation fehlt
+- [ ] Trainingstab
+- [ ] Graph?
+- [x] WiktionaryAPI verbessern
 
 ## Dateistruktur
 

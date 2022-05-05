@@ -12,26 +12,45 @@ export default class UIPopup {
     private element:HTMLDivElement;
     /**
      * @constructor
-     * @param parent Das parent element des Popups
-     * @param target_element Das Element, an dem sich das Popup orientieren soll
-     * @param title Der Titel des Popups
+     * @param _parent Das parent element des Popups
+     * @param _target_element Das Element, an dem sich das Popup orientieren soll
+     * @param _title Der Titel des Popups
      */
-    constructor(parent:HTMLElement, target_element:HTMLElement, title:string) {
-        this.parent = parent;
-        this.target_element = target_element;
-        this.entry = entry;
-        this.title = title;
+    constructor(_parent:HTMLElement, _target_element:HTMLElement, _title:string) {
+        this.parent = _parent;
+        this.target_element = _target_element;
+        this.title = _title;
+
+        UIPopup.resetAll();
 
         // Dem ELement die Klasse "active" geben
-        element.classList.toggle("active");
+        this.target_element.classList.toggle("active");
 
+        var popup = document.createElement("div");
+        popup.className = "popup";
+        popup.innerHTML = `<div></div>
+        <div onclick="UIPopup.resetAll()" class="close-btn">X</div>
+        <div class="content">
+            <div class="title">${_title}</div>
+            <div class="loading"><iframe src="../../ui/html/splash.html"></iframe></div>
+            <div class="entry"></div>
+        </div>`;
+
+        popup.style.visibility = "hidden";
+        this.element = popup;
+
+        _parent.appendChild(this.element);
+
+        this.adjustBounds();
+    }
+    adjustBounds() {
         // Dokumentmaße
         var doc_width = window.innerWidth;
         var doc_height = window.innerHeight;
 
         // Elementposition und offset
-        var el_offset = this.getElementOffset(element);
-        var el_pos = element.getBoundingClientRect();
+        var el_offset = this.getElementOffset(this.target_element);
+        var el_pos = this.target_element.getBoundingClientRect();
         /*   Pfeilrichtung      Pfeilposition */
         var pos_screen_side_X, pos_screen_side_Y;
         
@@ -49,32 +68,20 @@ export default class UIPopup {
             pos_screen_side_Y = "bottom";
         }
 
-        var popup = document.createElement("div");
-        popup.className = "popup";
-        popup.setAttribute("data-arrow-pos", pos_screen_side_Y);
-        popup.innerHTML = `<div class="arrow-${pos_screen_side_X}"></div>
-        <div onclick="HTMLWikipediaPageViewer.resetOverlays()" class="close-btn">X</div>
-        <div class="content">
-            <div class="title">${title}</div>
-            <div class="loading"><iframe src="../ui/html/splash.html"></iframe></div>
-            <div class="entry"></div>
-        </div>`;
 
-        popup.style.visibility = "hidden";
-        this.element = popup;
+        this.element.setAttribute("data-arrow-pos", pos_screen_side_Y);
+        this.element.children[0].className = "arrow-"+pos_screen_side_X;
 
-        parent.appendChild(popup);
-
-        // BoundingClientRect gibt die aktuelle Position und Größe des Elementes
-        var popup_rect = popup.getBoundingClientRect(); // popup rect
+        // BoundingClientRect gibt die aktuelle Position und Größe des Elements
+        var popup_rect = this.element.getBoundingClientRect(); // popup rect
 
         // Anpassung
         var changeX = 0;
         var changeY = 0;
         if(pos_screen_side_X == "left") {
-            changeX = element.getBoundingClientRect().width + 20;
+            changeX = this.target_element.getBoundingClientRect().width + 20;
         } else {
-            changeX = -popup_rect.width - 27;
+            changeX = 0 -popup_rect.width - 27;
         }
         if(pos_screen_side_Y == "top") {
             changeY = 5;
@@ -83,11 +90,18 @@ export default class UIPopup {
         }
 
         // Position
-        popup.style.left = Math.max(el_offset.left+changeX, 0)+"px";
-        popup.style.top = Math.max(el_offset.top+changeY, 0)+"px";
+        this.element.style.left = Math.max(el_offset.left+changeX, 0)+"px";
+        this.element.style.top = Math.max(el_offset.top+changeY, 0)+"px";
 
         // Anzeigen
-        popup.style.visibility = "";
+        this.element.style.visibility = "";
+    }
+    getElementOffset(element:HTMLElement) {
+        const rect = element.getBoundingClientRect();
+        return {
+            left: rect.left + this.parent.scrollLeft,
+            top: rect.top + this.parent.scrollTop
+        }
     }
     /**
      * Löscht alle overlays
@@ -96,14 +110,15 @@ export default class UIPopup {
         var old = document.querySelector(".popup");
         if(old)old.remove();
         for(var active_word of document.querySelectorAll(".word.active")) {
-            active_word.classList.toggle("active");
+            active_word.classList.remove("active");
         }
     }
     stopLoadingAnimation() {
-        this.popup.querySelector(".loading").remove();
+        this.element.querySelector(".loading")?.remove();
     }
     setEntry(entry:DictionaryEntry) {
-        this.popup.querySelector(".entry").innerText = entry.content;
+        (this.element.querySelector(".entry") as HTMLDivElement).innerHTML = entry.content;
         this.stopLoadingAnimation();
+        this.adjustBounds();
     }
 }
