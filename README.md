@@ -38,7 +38,6 @@ Die package Definition ist in `package.json` zu finden.
 
 ## Packaging
 
-### Building
 Es wird benötigt:
 - NodeJS + [Node Package Manager](https://nodejs.org/) (npm)
 - [Typescript](https://www.typescriptlang.org/) Compiler (tsc)
