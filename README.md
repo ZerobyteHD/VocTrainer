@@ -3,7 +3,8 @@
 ## To-dos
 
 - [x] Popup als eigene Klasse, Ladeanimation fehlt
-- [ ] Trainingstab
+- [x] Trainingstab
+- [ ] Trainingstab funktionsfähig machen
 - [ ] Graph?
 - [x] WiktionaryAPI verbessern
 

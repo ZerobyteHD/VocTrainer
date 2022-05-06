@@ -129,6 +129,11 @@ export class HTMLTrainerModeCrossWord extends HTMLTrainerMode {
         /* @source https://codepen.io/hamidionline/pen/OKJyYL */
     }
 
+    /**
+     * Gibt einen zufällig-generierten String der Länge length wieder
+     * @param length Länge des Strings
+     * @returns String
+     */
     randomString(length) {
         var result = "";
         var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
