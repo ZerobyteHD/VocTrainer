@@ -132,16 +132,16 @@ export class HTMLTrainerModeCrossWord extends HTMLTrainerMode {
     /**
      * Gibt einen zufällig-generierten String der Länge length wieder
      * @param length Länge des Strings
-     * @returns String
+     * @returns zufälligen String
      */
     randomString(length) {
-        var result = "";
-        var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        var charactersLength = characters.length;
+        var res = "";
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var charactersLength = chars.length;
         for ( var i = 0; i < length; i++ ) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            res += chars.charAt(Math.floor(Math.random() * charactersLength));
         }
-        return result;
+        return res;
     }
 
     getRandomInt(min, max) {

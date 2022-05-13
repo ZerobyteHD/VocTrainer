@@ -43,10 +43,13 @@ export default class UIPopup {
 
         this.adjustBounds();
     }
+    /**
+     * Gibt dem Popup richtige Position und Offset und bestimmt die Richtung des Pfeils 
+     */
     adjustBounds() {
         // Dokumentmaße
-        var doc_width = window.innerWidth;
-        var doc_height = window.innerHeight;
+        var doc_width = window.innerWidth; // Breite
+        var doc_height = window.innerHeight; // Höhe
 
         // Elementposition und offset
         var el_offset = this.getElementOffset(this.target_element);
@@ -55,7 +58,7 @@ export default class UIPopup {
         var pos_screen_side_X, pos_screen_side_Y;
         
         // Pfeilrichtung bestimmen
-        if(el_pos.left < doc_width/2) {
+        if(el_pos.left < doc_width/2) { // Abstand nach links kleiner als die Hälfte der Dokumentbreite?
             pos_screen_side_X = "left";
         } else {
             pos_screen_side_X = "right";
@@ -75,7 +78,7 @@ export default class UIPopup {
         // BoundingClientRect gibt die aktuelle Position und Größe des Elements
         var popup_rect = this.element.getBoundingClientRect(); // popup rect
 
-        // Anpassung
+        // Kleine Veränderung für Ästhetik
         var changeX = 0;
         var changeY = 0;
         if(pos_screen_side_X == "left") {
@@ -96,6 +99,11 @@ export default class UIPopup {
         // Anzeigen
         this.element.style.visibility = "";
     }
+    /**
+     * Änhlich wie HTMLElement.getBoundingClientRect, beachtet aber das Offset, das durch das Scrollen der Seite dazukommt
+     * @param element Element
+     * @returns Element Offset
+     */
     getElementOffset(element:HTMLElement) {
         const rect = element.getBoundingClientRect();
         return {
@@ -113,9 +121,16 @@ export default class UIPopup {
             active_word.classList.remove("active");
         }
     }
+    /**
+     * Stoppt die Ladeanimation
+     */
     stopLoadingAnimation() {
         this.element.querySelector(".loading")?.remove();
     }
+    /**
+     * Fügt den tatsächlichen Inhalt hinzu.
+     * @param entry Dictionary Eintrag
+     */
     setEntry(entry:DictionaryEntry) {
         (this.element.querySelector(".entry") as HTMLDivElement).innerHTML = entry.content;
         this.stopLoadingAnimation();

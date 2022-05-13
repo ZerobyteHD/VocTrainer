@@ -1,3 +1,7 @@
+/**
+ * Diese Datei ist die main-file, siehe package.json
+ */
+
 /* Imports */
 import {app, BrowserWindow, Menu, Tray, ipcMain, globalShortcut, MenuItem} from "electron";
 // @ts-ignore
@@ -79,7 +83,7 @@ function createWindow():void {
             mainWin.maximize();
             load_splash.destroy();
             if(argv_switches.debug)
-            mainWin.webContents.openDevTools({"mode":"detach"});
+                mainWin.webContents.openDevTools({"mode":"detach"});
         }, SPLASHSCREEN_DELAY);
     });
 
