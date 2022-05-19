@@ -16,7 +16,12 @@ export default class UIPopup {
      * @param _target_element Das Element, an dem sich das Popup orientieren soll
      * @param _title Der Titel des Popups
      */
-    constructor(_parent:HTMLElement, _target_element:HTMLElement, _title:string) {
+    constructor(_parent:HTMLElement, _target_element:HTMLElement, _title:string, change_callback:(new_title:string)=>void) {
+        function capitalizeFirstLetter(string:string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+          
+
         this.parent = _parent;
         this.target_element = _target_element;
         this.title = _title;
@@ -26,12 +31,20 @@ export default class UIPopup {
         // Dem ELement die Klasse "active" geben
         this.target_element.classList.toggle("active");
 
+        var optional_change_value = "";
+        // ist Großbuchstabe
+        if(_title.charAt(0) !== _title.charAt(0).toUpperCase()) {
+            optional_change_value = `<span style="text-decoration:underline;color:light-blue;cursor:pointer" id="change-value">Ich meinte "${capitalizeFirstLetter(_title)}"</span>`;
+        }
+
         var popup = document.createElement("div");
         popup.className = "popup";
         popup.innerHTML = `<div></div>
         <div onclick="UIPopup.resetAll()" class="close-btn">X</div>
         <div class="content">
             <div class="title">${_title}</div>
+            ${optional_change_value}
+            <br>
             <div class="loading"><iframe src="../../ui/html/splash.html"></iframe></div>
             <div class="entry"></div>
         </div>`;
@@ -42,6 +55,14 @@ export default class UIPopup {
         _parent.appendChild(this.element);
 
         this.adjustBounds();
+
+        if(optional_change_value) {
+            var change_value:HTMLSpanElement = popup.querySelector("#change-value") as HTMLSpanElement;
+            change_value.addEventListener("click", ()=>{
+                this.target_element.dataset.value = capitalizeFirstLetter(this.target_element.dataset.value as string);
+                change_callback(this.target_element.dataset.value);
+            });
+        }
     }
     adjustBounds() {
         // Dokumentmaße
@@ -116,9 +137,19 @@ export default class UIPopup {
     stopLoadingAnimation() {
         this.element.querySelector(".loading")?.remove();
     }
-    setEntry(entry:DictionaryEntry) {
+    setEntry(entry:DictionaryEntry, change_callback:(new_title: string)=>void=(new_title:string)=>{}) {
         (this.element.querySelector(".entry") as HTMLDivElement).innerHTML = entry.content;
         this.stopLoadingAnimation();
         this.adjustBounds();
+
+        var elems = this.element.querySelectorAll(".change-value");
+        if(elems) {
+            for(var elem of elems) {
+                elem.addEventListener("click", (e)=>{
+                    console.log("click", e);
+                    change_callback((e.target as HTMLElement).dataset.word as string);
+                });
+            }
+        }
     }
 }

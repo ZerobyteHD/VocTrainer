@@ -31,6 +31,48 @@ async function wiki_get_image(src:string) {
     return url;
 }
 
+async function generatePopupUi(data:WiktionaryDataResult) {
+    var html = "";
+    // Wenn es Bilder zu diesem Wort gibt, werden diese in das Popup eingebaut
+    if(data.images) {
+        html += `<div class="dict-images">`;
+        for(var image of data.images) {
+            var img_url = await wiki_get_image("https://en.wiktionary.org"+image.url);
+            html += `<img class="materialboxed" src="${img_url}" alt="${image.caption}" title="${image.caption}">`;
+        }
+        html += "</div>";
+    }
+    // Bedeutungen
+    if(data.meanings)
+    for(var type in data.meanings) {
+        var type_data = data.meanings[type];
+        if(!type_data)continue;
+
+        html += `<b class="dict-word-title">As ${type.replace("_"," ")}</b><br><div class="meaning-container">`;
+        html += `<b class="dict-meaning-head">${type_data.head}</b><br><br>`;
+        for(var meaning of type_data.meanings) {
+            if(meaning.text.includes("plural of ") || meaning.text.includes("form of ") || meaning.text.includes("indicative of ")) {
+                var r = /(?:form|indicative|plural)\ of\ ([a-zA-Z\'\-]{1,})/g;
+                // @ts-ignore
+                var words = r.exec(meaning.text);
+                if(words)
+                if(words?.length > 1) {
+                    var word = words[1];
+                    html += `<span style="text-decoration:underline;color:light-blue;cursor:pointer" class="dict-meaning-text change-value" data-word="${word}">${meaning.text}</span><br>`;
+                }
+            } else {
+                html += `<span class="dict-meaning-text">${meaning.text}</span><br>`;
+                if(meaning.example) {
+                    html += `<span class="dict-example">➔ </span><i>${meaning.example}</i><br><br>`;
+                }
+            }
+        }
+        html += "</div>";
+    }
+
+    return html;
+}
+
 /**
  * HTML-Element zur visualisierung einer Suche auf Wikipedia
  */
@@ -90,7 +132,7 @@ export class HTMLWikipediaSearchViewer extends HTMLElement {
                     this.preview.appendChild(div2);
                 }
                 this.preview.dataset.active = true;
-            }, 1000);
+            }, 500);
         });
 
         this.appendChild(div);
@@ -114,47 +156,30 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
         this.word_onclick = async(e:any)=>{
             // geklicktes Element hat die Klasse "word"
             if(e.target.className == "word") {
+                const word_changed = async (new_title:string) => {
+                    var data:WiktionaryDataResult = await wiki_api.fetchData(new_title);
+                    Popup.resetAll();
+                    var popup = new Popup(parent, e.target, new_title, word_changed);
+                    var html = await generatePopupUi(data);
+                    popup.setEntry({content: html}, word_changed);
+                }
+
                 // Suche nach dem Text des Wortelementes
-                var data:WiktionaryDataResult = await wiki_api.fetchData(e.target.innerText);
+                var data:WiktionaryDataResult = await wiki_api.fetchData(e.target.dataset.value);
                 // Daten werden zwischengespeichert (für Debugging)
                 window.data = data;
                 // Ist ein Fehler aufgetreten?
                 if(data.error) {
                     // Wenn ja, wurde keine Defintion gefunden
-                    var popup = new Popup(parent, e.target, e.target.innerText);
-                    popup.setEntry({content:"Keine Definitionen gefunden"});
+                    var popup = new Popup(parent, e.target, e.target.dataset.value, word_changed);
+                    popup.setEntry({content:"Keine Definitionen gefunden"}, word_changed);
                 } else {
                     // Wenn nicht:
-                    var popup = new Popup(parent, e.target, e.target.innerText);
+                    var popup = new Popup(parent, e.target, e.target.dataset.value, word_changed);
 
-                    var html = "";
-                    // Wenn es Bilder zu diesem Wort gibt, werden diese in das Popup eingebaut
-                    if(data.images) {
-                        html += `<div class="dict-images">`;
-                        for(var image of data.images) {
-                            var img_url = await wiki_get_image("https://en.wiktionary.org"+image.url);
-                            html += `<img class="materialboxed" src="${img_url}" alt="${image.caption}" title="${image.caption}">`;
-                        }
-                        html += "</div>";
-                    }
-                    // Bedeutungen
-                    if(data.meanings)
-                    for(var type in data.meanings) {
-                        var type_data = data.meanings[type];
-                        if(!type_data)continue;
-
-                        html += `<b class="dict-word-title">As ${type.replace("_"," ")}</b><br><div class="meaning-container">`;
-                        html += `<b class="dict-meaning-head">${type_data.head}</b><br><br>`;
-                        for(var meaning of type_data.meanings) {
-                            html += `<span class="dict-meaning-text">${meaning.text}</span><br>`;
-                            if(meaning.example) {
-                                html += `<span class="dict-example">➔ </span><i>${meaning.example}</i><br><br>`;
-                            }
-                        }
-                        html += "</div>";
-                    }
+                    var html = await generatePopupUi(data);
                     // Popup zeigen
-                    popup.setEntry({content: html});
+                    popup.setEntry({content: html}, word_changed);
 
                     // @ts-ignore
                     M.Materialbox.init(document.querySelectorAll(".materialboxed"));
@@ -181,7 +206,18 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
      */
     static contentToWords(content:string):string {
         var wordRegex = /([a-zA-Z\'\-]{1,})/g;
-        return content.replace(wordRegex, "<span class='word'>$1</span>");
+        return content.replace(wordRegex, (r) => {
+            var initial = r;
+            if(!["I"].includes(r)) {
+                if(r.length > 1) {
+                    // not all caps
+                    if(r.toUpperCase() !== r) {
+                        r = r.toLowerCase();
+                    }
+                }
+            }
+            return `<span data-value="${r}" class="word">${initial}</span>`;
+        });
     }
     /**
      * Umhüllt eine HTML-Text-Node mit einem Span-Element
