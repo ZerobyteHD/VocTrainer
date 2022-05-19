@@ -195,12 +195,12 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
 
         window.addEventListener("resize", ()=>{
             // Wenn die Größe des Fensters verändert wird, werden alle Overlays entfernt
-            // Grund: Implementierung einer Anpassung zu aufwändig
+            // Grund: Implementierung einer Anpassung zu aufwendig
             Popup.resetAll();
         });
     }
     /**
-     * Konvertiert einen String zu einem HTML String mit "spans"
+     * Konvertiert einen String zu einem String mit HTML Syntax aus SPAN-Elementen
      * @param content Zu konvertierender String
      * @returns HTML String mit Span-Elementen
      */
@@ -247,10 +247,16 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
             }
         }
     }
+    /**
+     * Umhüllt jedes Wort aus dem rohen HTML String mit einem SPAN-Element
+     * @param raw_html 
+     * @returns 
+     */
     static htmlToWords(raw_html:string):string {
         // "//" -> "https://"
         raw_html = raw_html.replace(/((?:srcset|src)=")(\/\/)/g, "$1https://");
 
+        // Alle Wiki-links werden mit einen benutzerdefinierten Aufruf ausgetauscht
         // wiki-links -> window.wiki_page.load
         raw_html = raw_html.replace(/href="\/wiki\/([a-zA-Z_-]{1,})"/g, `href="javascript:window.wiki_page.load('$1')"`);
 

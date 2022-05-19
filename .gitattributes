@@ -1,3 +1,3 @@
-ui/css/wikipedia.css linguist-vendored=false
-ui/css/wikipedia.sc.css linguist-vendored=false
-lib/**/* linguist-vendored=false
+ui/css/wikipedia.css linguist-vendored
+ui/css/wikipedia.sc.css linguist-vendored
+lib/** linguist-vendored

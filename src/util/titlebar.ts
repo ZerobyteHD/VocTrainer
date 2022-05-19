@@ -12,9 +12,9 @@ declare global {
 }
 
 
-const DOM_READY:Event = new Event("electron-page-ready");
+const DOM_READY:Event = new Event("electron-page-ready"); // Event, das bescheid gibt, wenn das Programm vollständig geladen hat
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", () => { // Wird ausgeführt, sobald der Dokument-Content geladen ist
     window.titlebar = new Titlebar({
         backgroundColor: Color.fromHex("#474747"),
         itemBackgroundColor: Color.fromHex("#121212"),
@@ -23,5 +23,5 @@ window.addEventListener("DOMContentLoaded", () => {
         iconSize: 36
     });
     document.dispatchEvent(DOM_READY);
-    window.DOM_READY = 1;
+    window.DOM_READY = 1; // Fallback
 });

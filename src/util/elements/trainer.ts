@@ -121,3 +121,32 @@ export class HTMLTrainerModeInputWord extends HTMLTrainerMode {
         this.pointer++;
     }
 }
+
+export class HTMLTrainerModeCrossWord extends HTMLTrainerMode {
+    constructor(data:VocabularyWordData[], callback:Function) {
+        super(data, callback);
+
+        /* @source https://codepen.io/hamidionline/pen/OKJyYL */
+    }
+
+    /**
+     * Gibt einen zufällig-generierten String der Länge length wieder
+     * @param length Länge des Strings
+     * @returns zufälligen String
+     */
+    randomString(length) {
+        var res = "";
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var charactersLength = chars.length;
+        for ( var i = 0; i < length; i++ ) {
+            res += chars.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return res;
+    }
+
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+}
