@@ -1,8 +1,18 @@
-# VocTrainer
+# Phraser
 
 ## Nutzung
 
-Blabla...
+### Wörter hinzufügen
+
+- manuell im Tab "Mein Vokabular"
+- im Wikipedia-Reader, Linksklick auf ein Wort (vielleicht kurz warten, braucht manchmal etwas) und bei einer Definition auf speichern drücken
+
+### Wikipedia-Reader
+
+1) Namen eines Wikipedia-Artikels eingeben
+2) Auf den darunter erscheinenden Vorschlag klicken
+3) Warten, bis die Seite geladen ist
+4) Nun kann auf Wörter geklickt werden, um die Definition laut wiktionary.com zu sehen
 
 ## Dateistruktur
 
