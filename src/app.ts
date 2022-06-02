@@ -1,6 +1,6 @@
 import { HTMLWikipediaSearchViewer, HTMLWikipediaPageViewer } from "./util/api/wikipedia/@elements/viewers";
 import ConfettiRenderer from "./util/animation/confetti";
-import {HTMLTrainerElement, HTMLTrainerMode, HTMLTrainerModeVocabularyScanner, HTMLTrainerElementSelect} from "./util/elements/trainer";
+import {HTMLTrainerElement, HTMLTrainerMode, HTMLTrainerModeVocabularyScanner, HTMLTrainerElementSelect, HTMLTrainerModeVocabularyQuiz} from "./util/elements/trainer";
 import {VocabManager} from "./util/vocabmanager";
 import {show_prompt} from "./util/elements/modal_prompt";
 
@@ -69,6 +69,7 @@ customElements.define("unused-trainer-mode", HTMLTrainerMode);
 customElements.define("vocab-trainer-scanner", HTMLTrainerModeVocabularyScanner);
 customElements.define("vocab-trainer", HTMLTrainerElement);
 customElements.define("vocab-trainer-selector", HTMLTrainerElementSelect);
+customElements.define("vocab-trainer-quiz", HTMLTrainerModeVocabularyQuiz);
 
 async function main():Promise<void> {
     const page = document.querySelector(".cet-container > .content") as HTMLElement;
@@ -95,8 +96,15 @@ async function main():Promise<void> {
     var trainer = new HTMLTrainerElement(async ()=>{
         var d = await window.sql_manager.getAll();
         return d;
-    }, ()=>{
+    }, (data:any)=>{
         window.confetti.playFor(1000);
+        if(data) {
+            if(data.end && data.right) {
+                alert(`Glückwunsch! ${data.right}/${data.right+data.wrong}`);
+            }
+        }
+    }, (data:any)=>{
+        alert("Leider falsch. Richtige Antwort: "+data);
     });
     trainer.initAsHost();
     trainer_tab.appendChild(trainer);

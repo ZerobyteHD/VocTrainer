@@ -242,3 +242,6 @@ div#prompt-modal {
 #prompt-modal .modal-footer a {
     color: white;
 }
+a.waves-effect.waves-light.btn {
+    margin: 10px;
+}

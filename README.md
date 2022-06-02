@@ -1,12 +1,8 @@
 # VocTrainer
 
-## To-dos
+## Nutzung
 
-- [x] Popup als eigene Klasse, Ladeanimation fehlt
-- [x] Trainingstab
-- [ ] Trainingstab funktionsfähig machen
-- [ ] Graph?
-- [x] WiktionaryAPI verbessern
+Blabla...
 
 ## Dateistruktur
 
@@ -36,6 +32,10 @@ VocTrainer nutzt das NodeJS Modul [Electron](https://www.electronjs.org/) zur Da
 Als Programmiersprache wird Typescript benutzt, das zu JavaScript (CommonJS) konvertiert wird. Die Typescript Compiler Optionen sind in `tsconfig.json` zu finden.
 
 Das NodeJS package wird in `package.json` definiert
+
+## Speicher
+
+Die Vokabeln werden in einer .db-Datei im Appdata/Roaming Verzeichnis des aktuellen Nutzers gespeichert. (auffindbar durch `%APPDATA%/phraser_trainer`)
 
 ## Packaging
 
