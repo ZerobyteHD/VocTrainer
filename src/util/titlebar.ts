@@ -18,7 +18,7 @@ window.addEventListener("DOMContentLoaded", () => { // Wird ausgeführt, sobald 
     window.titlebar = new Titlebar({
         backgroundColor: Color.fromHex("#474747"),
         itemBackgroundColor: Color.fromHex("#121212"),
-        icon: path.join(__dirname, "../../assets/icons/32.png"),
+        icon: path.join(__dirname, "../../assets/icons/icon_32.png"),
         shadow: true,
         iconSize: 36
     });

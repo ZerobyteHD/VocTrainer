@@ -31,7 +31,7 @@ async function wiki_get_image(src:string) {
     return url;
 }
 
-async function generatePopupUi(data:WiktionaryDataResult) {
+async function generatePopupUi(data:WiktionaryDataResult, word:string) {
     var html = "";
     // Wenn es Bilder zu diesem Wort gibt, werden diese in das Popup eingebaut
     if(data.images) {
@@ -48,7 +48,9 @@ async function generatePopupUi(data:WiktionaryDataResult) {
         var type_data = data.meanings[type];
         if(!type_data)continue;
 
-        html += `<b class="dict-word-title">As ${type.replace("_"," ")}</b><br><div class="meaning-container">`;
+        html += `<b class="dict-word-title">As ${type.replace("_"," ")}</b>
+        <a onclick="save_word('${type == "verb" ? Buffer.from("to "+word).toString("base64") : Buffer.from(word).toString("base64")}', '${type}', '${Buffer.from(type_data.meanings[0].text).toString("base64")}')" class="waves-effect waves-light btn _small"><i class="material-icons left">save</i>Speichern</a>
+        <br><div class="meaning-container">`;
         html += `<b class="dict-meaning-head">${type_data.head}</b><br><br>`;
         for(var meaning of type_data.meanings) {
             if(meaning.text.includes("plural of ") || meaning.text.includes("form of ") || meaning.text.includes("indicative of ")) {
@@ -160,7 +162,7 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                     var data:WiktionaryDataResult = await wiki_api.fetchData(new_title);
                     Popup.resetAll();
                     var popup = new Popup(parent, e.target, new_title, word_changed);
-                    var html = await generatePopupUi(data);
+                    var html = await generatePopupUi(data, new_title);
                     popup.setEntry({content: html}, word_changed);
                 }
 
@@ -177,7 +179,7 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                     // Wenn nicht:
                     var popup = new Popup(parent, e.target, e.target.dataset.value, word_changed);
 
-                    var html = await generatePopupUi(data);
+                    var html = await generatePopupUi(data, e.target.dataset.value);
                     // Popup zeigen
                     popup.setEntry({content: html}, word_changed);
 
@@ -328,7 +330,10 @@ export class HTMLWikipediaPageViewer extends HTMLElement {
                 this.write_sections(section);
             }
         } else if(load_type === 2) {
-            // Neue Methode, unfassbar performancelastig
+            // Neue Methode, unfassbar performancelastig, deshalb nicht benutzt
+            /**
+             * @unused
+             */
             var html = await res.html();
             this.write_html(html);
         } else throw "Unknown load type";

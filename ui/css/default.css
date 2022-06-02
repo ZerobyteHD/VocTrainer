@@ -211,3 +211,34 @@ span.word:hover, .word.active {
 #wiki-search {
     margin-bottom: 0!important;
 }
+
+/* HTMLTrainer */
+.btn-array {
+    margin-top: 50px;
+}
+.vocab-container {
+    background: white;
+    padding: 20px;
+    font-size: 2rem;
+    color: black;
+}
+span.word-info {
+    font-style: italic;
+    font-size: 1.4rem;
+}
+a.btn._small {
+    transform: scale(0.7);
+}
+table.highlight>tbody>tr:hover {
+    background-color: rgba(242,242,242,0.5);
+    color: black;
+}
+div#prompt-modal {
+    background-color: var(--eerie-black-light);
+}
+#prompt-modal .modal-footer {
+    background-color: var(--eerie-black-dark);
+}
+#prompt-modal .modal-footer a {
+    color: white;
+}

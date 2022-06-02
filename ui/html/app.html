@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../lib/materialize-v1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="../css/default.css">
     <link rel="stylesheet" href="../css/wikipedia.sc.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         .cet-window-title {
             font-size: 1.3rem!important;
@@ -24,22 +25,50 @@
         <div class="row">
             <div class="col s12 full-width">
                 <ul class="tabs">
-                    <li class="tab col s4"><a href="#home">Home</a></li>
-                    <li class="tab col s4"><a href="#wiki">Wiki</a></li>
-                    <li class="tab col s4"><a href="#trainer">Training</a></li>
+                    <li class="tab col s3"><a href="#home">Home</a></li>
+                    <li class="tab col s3"><a href="#wiki">Wiki</a></li>
+                    <li class="tab col s3"><a href="#trainer">Training</a></li>
+                    <li class="tab col s3"><a href="#vocab">Mein Vokabular</a></li>
                 </ul>
             </div>
             <!-- TABS -->
             <div id="home" class="col s12 tab-content">
-                <h1>Test Titel</h1>
-                <p>Test text</p>
+                <h1>Willkommen</h1>
+                <div class="col s6">
+                    <h3>Modus auswählen</h3>
+                    <br>
+                    <a onclick="tabs.select('wiki')" class="waves-effect waves-light btn"><i class="material-icons left">search</i>Zur Wikipedia-Suche</a>
+                    <br>
+                    <br>
+                    <br>
+                    <a onclick="tabs.select('trainer')" class="waves-effect waves-light btn"><i class="material-icons left">flash_on</i>Zum Training</a>
+                </div>
+                <div class="col s6">
+                    <h3>Mein Vokabular</h3>
+                    <a onclick="tabs.select('vocab')" class="waves-effect waves-light btn"><i class="material-icons left">format_color_text</i>Meine Wörter</a>
+                </div>
             </div>
-            <div id="wiki" class="col s12 tab-content"></div>
+            <div id="wiki" class="col s12 tab-content">
+                <p>Nutze die Suchleiste um Wikipediaartikel zu finden. Klicke auf den unter der Suchleiste erscheinenden Vorschlag, um den Artikel im Programm zu laden. Drücke mit Linksklick auf ein Wort, um die wiktionary-Definition zu laden.</p>
+            </div>
             <div id="trainer" class="col s12 tab-content">
                 <h1>Training</h1>
             </div>
+            <div id="vocab" class="col s12 tab-content">
+                <h1>Mein Vokabular</h1>
+                <a onclick="set_data_table()" class="waves-effect waves-light btn"><i class="material-icons left">refresh</i>Neuladen</a>
+                <a onclick="manual_add_word()" class="waves-effect waves-light btn"><i class="material-icons left">add</i>Wort hinzufügen</a>
+                <a onclick="manual_delete_word()" class="waves-effect waves-light btn"><i class="material-icons left">remove</i>Wort löschen</a>
+                <div id="data-table"></div>
+            </div>
         </div>
     </div>
+    <div id="prompt-modal" class="modal">
+        <div class="modal-content">
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
     <script src="../../lib/materialize-v1.0.0/js/materialize.min.js"></script>
     <script>
         /* Für Tests im Browser in einem IF-Statement */
