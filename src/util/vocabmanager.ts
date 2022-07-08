@@ -1,10 +1,14 @@
+/**
+ * Datei für das Management der Vokabeln
+ */
+
 import * as sqlite3 from "sqlite3";
 import {join} from "path";
-import * as fs from "fs";
+import * as fs from "fs"; // fs = filestream
 
-const APPDATA = process.env.APPDATA as string;
-const DB_LOC = join(APPDATA, "/phraser_trainer/vocab_data.db");
-const DB_DIR = join(APPDATA, "/phraser_trainer/");
+const APPDATA = process.env.APPDATA as string; // Appdata-Pfad
+const DB_LOC = join(APPDATA, "/phraser_trainer/vocab_data.db"); // Datenbank-Speicherort
+const DB_DIR = join(APPDATA, "/phraser_trainer/"); // Datenbank-Verzeichnis
 
 if(!fs.existsSync(DB_DIR)) {
     fs.mkdirSync(DB_DIR);
@@ -21,6 +25,11 @@ export class VocabManager {
             this.db.run("CREATE TABLE IF NOT EXISTS vocab (word TEXT, translation TEXT, type TEXT, hint TEXT)");
         });
     }
+    /**
+     * Existiert das Wort bereits in der Datenbank?
+     * @param word Das Wort
+     * @returns True | False
+     */
     async isDuplicate(word: string):Promise<boolean> {
         return new Promise((res, rej) => {
             this.db.serialize(()=>{
@@ -32,6 +41,10 @@ export class VocabManager {
             });
         });
     }
+    /**
+     * Gibt alle Daten zurück
+     * @returns Datenbank-Datensatz
+     */
     async getAll():Promise<any[]> {
         return new Promise((res, rej) => {
             this.db.serialize(()=>{
@@ -45,6 +58,13 @@ export class VocabManager {
             }); 
         });
     }
+    /**
+     * Wort einfügen
+     * @param word Das Wort
+     * @param translation Übersetzung
+     * @param type Wortart
+     * @param hint Hinweis / Beispiel
+     */
     async insert(word:string, translation:string|null, type:string|null, hint:string|null) {
         this.db.serialize(async ()=>{
             var is_dupl = await this.isDuplicate(word);
@@ -55,6 +75,10 @@ export class VocabManager {
             }
         });
     }
+    /**
+     * Löscht ein Wort aus der Datenbank
+     * @param word Das Wort
+     */
     delete(word:string) {
         this.db.serialize(()=>{
             this.db.run("DELETE FROM vocab WHERE word = ?", [word], (err) => {
@@ -62,9 +86,13 @@ export class VocabManager {
             })
         });
     }
+    /**
+     * Gibt die Daten in einer HTML-Tabelle zurück
+     * @returns HTML der Tabelle
+     */
     async getTableRepresentation() {
         var rows = await this.getAll();
-        var trs = "";
+        var trs = ""; // trs = table rows
         for(var row of rows) {
             trs += `<tr><td>${row.word}</td><td>${row.translation}</td><td>${row.type}</td><td>${row.hint}</td></tr>`;
         }

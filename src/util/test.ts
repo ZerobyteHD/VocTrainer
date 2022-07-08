@@ -1,3 +1,7 @@
+/**
+ * Datei für Tests
+ */
+
 import { getWordEntry } from "./api/dictionary";
 
 (async ()=>{

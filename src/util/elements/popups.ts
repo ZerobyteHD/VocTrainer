@@ -20,7 +20,6 @@ export default class UIPopup {
         function capitalizeFirstLetter(string:string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
-          
 
         this.parent = _parent;
         this.target_element = _target_element;
@@ -148,6 +147,11 @@ export default class UIPopup {
     stopLoadingAnimation() {
         this.element.querySelector(".loading")?.remove();
     }
+    /**
+     * Legt den Inhalt für das Popup fest
+     * @param entry Vokabeleintrag
+     * @param change_callback Callback für Veränderungen
+     */
     setEntry(entry:DictionaryEntry, change_callback:(new_title: string)=>void=(new_title:string)=>{}) {
         (this.element.querySelector(".entry") as HTMLDivElement).innerHTML = entry.content;
         this.stopLoadingAnimation();

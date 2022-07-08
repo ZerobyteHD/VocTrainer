@@ -1,3 +1,7 @@
+/**
+ * Diese Datei beinhaltet UI-Elemente
+ */
+
 import wiki from "wikijs";
 import fetch from "node-fetch";
 import WiktionaryScraper, { WiktionaryDataResult } from "js-wiktionary-scraper";

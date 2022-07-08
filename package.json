@@ -27,7 +27,7 @@
     "wikijs": "^6.3.3"
   },
   "build": {
-    "appId": "com.electron.voctrainer",
+    "appId": "com.electron.phraser",
     "productName": "Phraser",
     "files": [
       "assets/**/*",

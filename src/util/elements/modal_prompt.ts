@@ -1,3 +1,11 @@
+/**
+ * Beschreibt eine Funktion zur Aufforderung von Benutzerinput
+ * @param material_element Host-Element
+ * @param title Titel des Popup
+ * @param inputs Inputplatzhalter
+ * @param values IDs der Inputs
+ * @returns Promise<Object>
+ */
 export async function show_prompt(material_element: any, title:string, inputs: string[], values: string[]) {
     var element = material_element.el;
     var content = element.querySelector(".modal-content");

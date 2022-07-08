@@ -1,6 +1,6 @@
 /**
+ * Erzeugt eine Konfetti-Animation
  * @author Nico Opheys
- * @copyright 2022 Nico Opheys
  * @version 25.03.2022
  */
 

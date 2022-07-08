@@ -53,7 +53,7 @@ Es wird benötigt:
 - NodeJS + [Node Package Manager](https://nodejs.org/) (npm)
 - [Typescript](https://www.typescriptlang.org/) Compiler (tsc)
 
-Danach müssen alle benötigten Node Module installiert werden:
+Danach müssen alle benötigten NodeJS Module installiert werden:
 
 `> npm install`
 

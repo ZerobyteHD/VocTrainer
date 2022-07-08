@@ -1,3 +1,7 @@
+/**
+ * Diese Datei beinhaltet die Funktionen, die für das Vokabeltraining zuständig sind
+ */
+
 export interface VocabularyWordData {
     word: string;
     translation: string;
@@ -16,11 +20,12 @@ export function shuffleArray(array: any[]) {
 
 /**
  * @HTML vocab-trainer
+ * Super-Klasse
  */
 export class HTMLTrainerElement extends HTMLElement {
     onsuccess:Function;
     onfail:Function;
-    data:()=>Promise<any[]>;
+    data:()=>Promise<any[]>; // Funktion für Daten
     el_next:HTMLAnchorElement|null;
     el_change:HTMLAnchorElement|null;
     el_descr:HTMLParagraphElement|null;
@@ -38,7 +43,7 @@ export class HTMLTrainerElement extends HTMLElement {
         this.el_descr = null;
         this.next_cb = ()=>{};
     }
-    initAsHost() {
+    initAsHost() { // HTML-Elemente initialisieren
         this.innerHTML = `<div class="col s12">
             <p class="description">
             </p>
@@ -61,6 +66,11 @@ export class HTMLTrainerElement extends HTMLElement {
 
         this.setMode("selector");
     }
+
+    /**
+     * Modus wählen
+     * @param mode Name des Modus
+     */
     async setMode(mode:string) {
         console.info("Set mode called with param", mode);
         this.mode_host = this.mode_host as HTMLDivElement;
@@ -111,6 +121,9 @@ export class HTMLTrainerElement extends HTMLElement {
     }
 }
 
+/**
+ * Elemente zur Auswahl des Modus
+ */
 export class HTMLTrainerElementSelect extends HTMLElement {
     constructor() {
         super();
@@ -132,6 +145,9 @@ export class HTMLTrainerElementSelect extends HTMLElement {
     }
 }
 
+/**
+ * Super-Klasse für Elemente der Trainermodi
+ */
 export class HTMLTrainerMode extends HTMLElement {
     data:VocabularyWordData[];
     callback:Function;
@@ -143,6 +159,9 @@ export class HTMLTrainerMode extends HTMLElement {
     }
 }
 
+/**
+ * Scanner-Modus
+ */
 export class HTMLTrainerModeVocabularyScanner extends HTMLTrainerMode {
     pointer: number;
     el_word: HTMLSpanElement|null;
@@ -176,6 +195,7 @@ export class HTMLTrainerModeVocabularyScanner extends HTMLTrainerMode {
         this.el_word_info = this.children[0].children[0].children[1] as HTMLSpanElement;
         this.el_example = this.children[0].children[2].children[0] as HTMLParagraphElement;
     }
+    // nächstes Wort
     next() {
         if(this.pointer >= this.data.length) {
             this.callback("end");
@@ -233,6 +253,7 @@ export class HTMLTrainerModeVocabularyQuiz extends HTMLTrainerMode {
         var right_answer_added = false;
 
         for(var x = 1; x < this.num_options; x++) {
+            // Zufallschance für Position der richtigen Antwort
             // 1. Runde: 1/2
             // 2. Runde: 1/1
             var add_answer = HTMLTrainerModeVocabularyQuiz.chance(1/this.num_options+1-x) && !right_answer_added;
@@ -279,6 +300,7 @@ export class HTMLTrainerModeVocabularyQuiz extends HTMLTrainerMode {
     static chance(ratio: number) {
         return ratio > Math.random();
     }
+    // Generiert ein Wort mit Tippfehlern aus einer Wortvorlage
     static generateTypo(word: string) {
         var i_word = word;
         word = word.toLowerCase();

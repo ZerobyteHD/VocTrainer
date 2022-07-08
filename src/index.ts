@@ -1,5 +1,5 @@
 /**
- * Diese Datei ist die main-file, siehe package.json
+ * Diese Datei ist started den NodeJS-Hauptprozess, siehe package.json
  */
 
 /* Imports */
@@ -28,8 +28,7 @@ const InstanceLock:boolean = app.requestSingleInstanceLock();
 const SPLASHSCREEN_DELAY:number = 1000;
 const appdata:APPDATA_HELPER = new APPDATA_HELPER("VocTrainer", "data.json");
 
-var
-mainWin:electron.BrowserWindow;
+var mainWin:electron.BrowserWindow;
 
 /**
  * Beendet die App
@@ -112,7 +111,7 @@ app.on("window-all-closed", () => {
     app.quit();
 });
 app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    if(BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
 });

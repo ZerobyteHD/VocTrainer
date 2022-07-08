@@ -8,7 +8,8 @@ export interface APPDATA_DATA_OBJECT {
 }
 
 /**
- * z.B. >property1>child1
+ * @unused
+ * z.B. >settings>theme
  */
 export function getPropertyFromPattern(data: APPDATA_DATA_OBJECT, pattern: string):APPDATA_DATA_OBJECT|any {
     var current = data;
@@ -78,9 +79,18 @@ export class APPDATA_HELPER {
         var data = fs.readFileSync(this.data_file).toString();
         return JSON.parse(data);
     }
+    /**
+     * Überschreibt die Daten
+     * @param data_obj Objekt
+     */
     write(data_obj:object) {
         fs.writeFileSync(this.data_file, JSON.stringify(data_obj));
     }
+    /**
+     * Überschreibt einen Wert
+     * @param prop Eigenschaft
+     * @param value Wert
+     */
     write_prop(prop:string, value:any) {
         var data = this.read();
         data[prop] = value;
